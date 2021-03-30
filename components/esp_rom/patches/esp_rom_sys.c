@@ -40,7 +40,7 @@ IRAM_ATTR void esp_rom_install_channel_putc(int channel, void (*putc)(char c))
     }
 }
 
-#if CONFIG_IDF_TARGET_ESP32C3
+#if CONFIG_IDF_TARGET_ESP32C3 || CONFIG_IDF_TARGET_ESP32C6
 IRAM_ATTR void esp_rom_install_uart_printf(void)
 {
     extern void ets_install_uart_printf(void);

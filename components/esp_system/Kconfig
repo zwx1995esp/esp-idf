@@ -68,6 +68,7 @@ menu "ESP System Settings"
         default y if IDF_TARGET_ESP32 && FREERTOS_UNICORE
         default y if IDF_TARGET_ESP32S2
         default y if IDF_TARGET_ESP32C3
+        default y if IDF_TARGET_ESP32C6
         default y if IDF_TARGET_ESP32S3
 
     config ESP_SYSTEM_ALLOW_RTC_FAST_MEM_AS_HEAP
@@ -75,6 +76,7 @@ menu "ESP System Settings"
         default y if IDF_TARGET_ESP32
         default y if IDF_TARGET_ESP32S2
         default y if IDF_TARGET_ESP32C3
+        default y if IDF_TARGET_ESP32C6
         default n if IDF_TARGET_ESP32S3  # TODO
         depends on ESP_SYSTEM_RTC_FAST_MEM_AS_HEAP_DEPCHECK
         help
@@ -87,7 +89,7 @@ menu "ESP System Settings"
 
         config ESP_SYSTEM_MEMPROT_FEATURE
             bool "Enable memory protection"
-            depends on IDF_TARGET_ESP32C3 || IDF_TARGET_ESP32S2
+            depends on IDF_TARGET_ESP32C3 || IDF_TARGET_ESP32S2 || IDF_TARGET_ESP32C6
             default "y"
             help
                 If enabled, the permission control module watches all the memory access and fires the panic handler
@@ -192,7 +194,7 @@ menu "ESP System Settings"
 
     config ESP_CONSOLE_MULTIPLE_UART
         bool
-        default y if !IDF_TARGET_ESP32C3
+        default y if !IDF_TARGET_ESP32C3 && !IDF_TARGET_ESP32C6
 
     choice ESP_CONSOLE_UART_NUM
         prompt "UART peripheral to use for console output (0-1)"
@@ -226,7 +228,7 @@ menu "ESP System Settings"
         depends on ESP_CONSOLE_UART_CUSTOM
         range 0 46
         default 1 if IDF_TARGET_ESP32
-        default 21 if IDF_TARGET_ESP32C3
+        default 21 if IDF_TARGET_ESP32C3 || IDF_TARGET_ESP32C6
         default 43
         help
              This GPIO is used for console UART TX output in the ESP-IDF Bootloader and the app (including
@@ -240,7 +242,7 @@ menu "ESP System Settings"
         depends on ESP_CONSOLE_UART_CUSTOM
         range 0 46
         default 3 if IDF_TARGET_ESP32
-        default 20 if IDF_TARGET_ESP32C3
+        default 20 if IDF_TARGET_ESP32C3 || IDF_TARGET_ESP32C6
         default 44
         help
             This GPIO is used for UART RX input in the ESP-IDF Bootloader and the app (including

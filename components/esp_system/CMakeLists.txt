@@ -21,7 +21,7 @@ else()
             "stack_check.c"
             "task_wdt.c")
 
-    if(NOT (${target} STREQUAL "esp32c3") )
+    if(NOT (${target} STREQUAL "esp32c3") AND NOT (${target} STREQUAL "esp32c6") )
         list(APPEND srcs  "dbg_stubs.c")
     endif()
 

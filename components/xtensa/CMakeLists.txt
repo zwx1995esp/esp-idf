@@ -4,6 +4,10 @@ if("${target}" STREQUAL "esp32c3")
     return()
 endif()
 
+if("${target}" STREQUAL "esp32c6")
+    return()
+endif()
+
 set(srcs "eri.c" "xt_trax.c")
 
 if(NOT BOOTLOADER_BUILD)

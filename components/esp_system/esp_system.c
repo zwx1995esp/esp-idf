@@ -28,6 +28,8 @@
 #include "esp32s3/memprot.h"
 #elif CONFIG_IDF_TARGET_ESP32C3
 #include "esp32c3/memprot.h"
+#elif CONFIG_IDF_TARGET_ESP32C6
+#include "esp32c6/memprot.h"
 #endif
 
 #define SHUTDOWN_HANDLERS_NO 4

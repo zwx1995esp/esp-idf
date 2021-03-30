@@ -39,6 +39,11 @@
 #include "esp32c3/rom/cache.h"
 #include "soc/extmem_reg.h"
 #include "soc/cache_memory.h"
+#elif CONFIG_IDF_TARGET_ESP32C6
+#include "esp32c6/rom/spi_flash.h"
+#include "esp32c6/rom/cache.h"
+#include "soc/extmem_reg.h"
+#include "soc/cache_memory.h"
 #endif
 #include <soc/soc.h>
 #include "sdkconfig.h"
@@ -319,7 +324,7 @@ static void IRAM_ATTR spi_flash_disable_cache(uint32_t cpuid, uint32_t *saved_st
     icache_state = Cache_Suspend_ICache() << 16;
     dcache_state = Cache_Suspend_DCache();
     *saved_state = icache_state | dcache_state;
-#elif CONFIG_IDF_TARGET_ESP32C3
+#elif CONFIG_IDF_TARGET_ESP32C3 || CONFIG_IDF_TARGET_ESP32C6
     uint32_t icache_state;
     icache_state = Cache_Suspend_ICache() << 16;
     *saved_state = icache_state;
@@ -345,7 +350,7 @@ static void IRAM_ATTR spi_flash_restore_cache(uint32_t cpuid, uint32_t saved_sta
 #elif CONFIG_IDF_TARGET_ESP32S3
     Cache_Resume_DCache(saved_state & 0xffff);
     Cache_Resume_ICache(saved_state >> 16);
-#elif CONFIG_IDF_TARGET_ESP32C3
+#elif CONFIG_IDF_TARGET_ESP32C3 || CONFIG_IDF_TARGET_ESP32C6
     Cache_Resume_ICache(saved_state >> 16);
 #endif
 }
@@ -359,7 +364,7 @@ IRAM_ATTR bool spi_flash_cache_enabled(void)
 #endif
 #elif CONFIG_IDF_TARGET_ESP32S2
     bool result = (REG_GET_BIT(EXTMEM_PRO_ICACHE_CTRL_REG, EXTMEM_PRO_ICACHE_ENABLE) != 0);
-#elif CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32C3
+#elif CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32C3 || CONFIG_IDF_TARGET_ESP32C6
     bool result = (REG_GET_BIT(EXTMEM_ICACHE_CTRL_REG, EXTMEM_ICACHE_ENABLE) != 0);
 #endif
     return result;
@@ -474,7 +479,7 @@ esp_err_t esp_enable_cache_wrap(bool icache_wrap_enable, bool dcache_wrap_enable
     int i;
     bool flash_spiram_wrap_together, flash_support_wrap = true, spiram_support_wrap = true;
     uint32_t drom0_in_icache = 1;//always 1 in esp32s2
-#if CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32C3
+#if CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32C3 || CONFIG_IDF_TARGET_ESP32C6
     drom0_in_icache = 0;
 #endif
 
@@ -875,7 +880,7 @@ esp_err_t esp_enable_cache_wrap(bool icache_wrap_enable, bool dcache_wrap_enable
 }
 #endif
 
-#if CONFIG_IDF_TARGET_ESP32C3
+#if CONFIG_IDF_TARGET_ESP32C3 || CONFIG_IDF_TARGET_ESP32C6
 
 static IRAM_ATTR void esp_enable_cache_flash_wrap(bool icache)
 {

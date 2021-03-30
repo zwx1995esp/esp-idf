@@ -72,6 +72,12 @@
 #include "esp32c3/rom/rtc.h"
 #include "soc/extmem_reg.h"
 #include "esp_heap_caps.h"
+#elif CONFIG_IDF_TARGET_ESP32C6
+#include "esp32c6/clk.h"
+#include "esp32c6/rom/cache.h"
+#include "esp32c6/rom/rtc.h"
+#include "soc/extmem_reg.h"
+#include "esp_heap_caps.h"
 #endif
 
 // If light sleep time is less than that, don't power down flash
@@ -97,6 +103,10 @@
 #define DEFAULT_HARDWARE_OUT_OVERHEAD_US    (0)
 #elif CONFIG_IDF_TARGET_ESP32C3
 #define DEFAULT_CPU_FREQ_MHZ                CONFIG_ESP32C3_DEFAULT_CPU_FREQ_MHZ
+#define DEFAULT_SLEEP_OUT_OVERHEAD_US       (105)
+#define DEFAULT_HARDWARE_OUT_OVERHEAD_US    (37)
+#elif CONFIG_IDF_TARGET_ESP32C6
+#define DEFAULT_CPU_FREQ_MHZ                CONFIG_ESP32C6_DEFAULT_CPU_FREQ_MHZ
 #define DEFAULT_SLEEP_OUT_OVERHEAD_US       (105)
 #define DEFAULT_HARDWARE_OUT_OVERHEAD_US    (37)
 #endif
@@ -786,7 +796,7 @@ esp_err_t esp_light_sleep_start(void)
     s_light_sleep_wakeup = true;
 
     // FRC1 has been clock gated for the duration of the sleep, correct for that.
-#ifdef CONFIG_IDF_TARGET_ESP32C3
+#if CONFIG_IDF_TARGET_ESP32C3 || CONFIG_IDF_TARGET_ESP32C6
     /**
      * On esp32c3, rtc_time_get() is non-blocking, esp_system_get_time() is
      * blocking, and the measurement data shows that this order is better.

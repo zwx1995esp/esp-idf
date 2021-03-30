@@ -44,6 +44,10 @@
 #include "esp32c3/rom/rtc.h"
 #include "esp32c3/clk.h"
 #include "esp32c3/rtc.h"
+#elif CONFIG_IDF_TARGET_ESP32C6
+#include "esp32c6/rom/rtc.h"
+#include "esp32c6/clk.h"
+#include "esp32c6/rtc.h"
 #endif
 
 

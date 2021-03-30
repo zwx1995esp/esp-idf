@@ -159,7 +159,7 @@
 #include "sdkconfig.h"
 #include "soc/soc.h"
 #include "soc/dport_access.h"
-#if !CONFIG_IDF_TARGET_ESP32C3
+#if !CONFIG_IDF_TARGET_ESP32C3 && !CONFIG_IDF_TARGET_ESP32C6
 #include "soc/dport_reg.h"
 #endif
 #if CONFIG_IDF_TARGET_ESP32S2 || CONFIG_IDF_TARGET_ESP32S3

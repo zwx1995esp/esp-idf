@@ -32,6 +32,8 @@ if(BOOTLOADER_BUILD)
 
     elseif(target STREQUAL "esp32c3")
         rom_linker_script("newlib")
+    elseif(target STREQUAL "esp32c6")
+        rom_linker_script("newlib")
     endif()
 
 else() # Regular app build
@@ -84,6 +86,14 @@ else() # Regular app build
         endif()
 
     elseif(target STREQUAL "esp32c3")
+        rom_linker_script("newlib")
+        rom_linker_script("version")
+
+        if(CONFIG_NEWLIB_NANO_FORMAT)
+            rom_linker_script("newlib-nano")
+        endif()
+
+    elseif(target STREQUAL "esp32c6")
         rom_linker_script("newlib")
         rom_linker_script("version")
 

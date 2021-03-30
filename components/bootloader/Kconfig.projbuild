@@ -394,12 +394,12 @@ menu "Security features"
     config SECURE_BOOT_SUPPORTS_RSA
         bool
         default y
-        depends on ESP32_REV_MIN_3 || IDF_TARGET_ESP32S2 || IDF_TARGET_ESP32C3
+        depends on ESP32_REV_MIN_3 || IDF_TARGET_ESP32S2 || IDF_TARGET_ESP32C3 || IDF_TARGET_ESP32C6
 
     config SECURE_TARGET_HAS_SECURE_ROM_DL_MODE
         bool
         default y
-        depends on IDF_TARGET_ESP32S2 || IDF_TARGET_ESP32C3
+        depends on IDF_TARGET_ESP32S2 || IDF_TARGET_ESP32C3 || IDF_TARGET_ESP32C6
 
 
     config SECURE_SIGNED_APPS_NO_SECURE_BOOT
