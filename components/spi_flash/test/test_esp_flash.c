@@ -30,6 +30,8 @@
 #include "esp32s3/rom/cache.h"
 #elif CONFIG_IDF_TARGET_ESP32C3
 #include "esp32c3/rom/cache.h"
+#elif CONFIG_IDF_TARGET_ESP32C6
+#include "esp32c6/rom/cache.h"
 #endif
 
 #define FUNC_SPI    1
@@ -99,7 +101,7 @@ static uint8_t sector_buf[4096];
 #define HSPI_PIN_NUM_WP     FSPI_PIN_NUM_WP
 #define HSPI_PIN_NUM_CS     FSPI_PIN_NUM_CS
 
-#elif CONFIG_IDF_TARGET_ESP32C3
+#elif CONFIG_IDF_TARGET_ESP32C3 || CONFIG_IDF_TARGET_ESP32C6
 #define SPI1_CS_IO          26  //the pin which is usually used by the PSRAM cs
 #define SPI1_HD_IO          27  //the pin which is usually used by the PSRAM hd
 #define SPI1_WP_IO          28  //the pin which is usually used by the PSRAM wp
@@ -235,7 +237,7 @@ flashtest_config_t config_list[] = {
         .input_delay_ns = 0,
     },
 };
-#elif CONFIG_IDF_TARGET_ESP32C3
+#elif CONFIG_IDF_TARGET_ESP32C3 || CONFIG_IDF_TARGET_ESP32C6
 flashtest_config_t config_list[] = {
     /* No SPI1 CS1 flash on esp32c3 test */
     {
