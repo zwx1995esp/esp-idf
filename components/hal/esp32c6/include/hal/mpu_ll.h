@@ -1,4 +1,4 @@
-// Copyright 2020 Espressif Systems (Shanghai) PTE LTD
+// Copyright 2021 Espressif Systems (Shanghai) PTE LTD
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,40 +14,5 @@
 
 #include <stdint.h>
 
-#include "soc/mpu_caps.h"
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-/* This LL is currently unused for ESP32-C3 - cleanup is TODO ESP32-C3 IDF-2375 */
-
-static inline uint32_t mpu_ll_id_to_addr(int id)
-{
-    abort();
-}
-
-static inline void mpu_ll_set_region_rw(uint32_t addr)
-{
-    abort();
-}
-
-static inline void mpu_ll_set_region_rwx(uint32_t addr)
-{
-    abort();
-}
-
-static inline void mpu_ll_set_region_x(uint32_t addr)
-{
-    abort();
-}
-
-
-static inline void mpu_ll_set_region_illegal(uint32_t addr)
-{
-    abort();
-}
-
-#ifdef __cplusplus
-}
-#endif
+// The Lowlevel layer is same to ESP32-C3
+#include "../../../esp32c3/include/hal/mpu_ll.h"

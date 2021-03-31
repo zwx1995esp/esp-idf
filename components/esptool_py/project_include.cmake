@@ -12,6 +12,10 @@ if(target STREQUAL "esp32s3")
     endif()
 endif()
 
+if(target STREQUAL "esp32c6")
+    set(chip_model "esp32c6beta")
+endif()
+
 set(ESPTOOLPY ${python} "${CMAKE_CURRENT_LIST_DIR}/esptool/esptool.py" --chip ${chip_model})
 set(ESPSECUREPY ${python} "${CMAKE_CURRENT_LIST_DIR}/esptool/espsecure.py")
 set(ESPEFUSEPY ${python} "${CMAKE_CURRENT_LIST_DIR}/esptool/espefuse.py")
