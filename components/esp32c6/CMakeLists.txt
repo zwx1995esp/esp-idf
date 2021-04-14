@@ -13,7 +13,6 @@ else()
 
     set(srcs "cache_err_int.c"
              "clk.c"
-             "crosscore_int.c"
              "dport_access.c"
              "esp_hmac.c"
              "esp_ds.c"
