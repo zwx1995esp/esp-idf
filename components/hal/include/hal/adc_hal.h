@@ -5,7 +5,7 @@
 #include "hal/adc_ll.h"
 #include "esp_err.h"
 
-#if CONFIG_IDF_TARGET_ESP32C3
+#if CONFIG_IDF_TARGET_ESP32C3 || CONFIG_IDF_TARGET_ESP32C6
 #include "soc/gdma_struct.h"
 #include "hal/gdma_ll.h"
 #include "hal/dma_types.h"
@@ -193,7 +193,7 @@ void adc_hal_digi_controller_config(const adc_digi_config_t *cfg);
 /*---------------------------------------------------------------
                     ADC Single Read
 ---------------------------------------------------------------*/
-#if !CONFIG_IDF_TARGET_ESP32C3
+#if !CONFIG_IDF_TARGET_ESP32C3 && !CONFIG_IDF_TARGET_ESP32C6
 /**
  * Set the attenuation of a particular channel on ADCn.
  *
