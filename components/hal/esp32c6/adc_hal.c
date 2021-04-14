@@ -42,7 +42,6 @@ void adc_hal_digi_deinit(void)
     adc_ll_digi_filter_reset(ADC_NUM_2);
     adc_ll_digi_reset();
     adc_ll_digi_controller_clk_disable();
-    adc_hal_deinit();
 }
 
 /**
