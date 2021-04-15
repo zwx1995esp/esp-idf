@@ -115,7 +115,7 @@ __attribute__((unused)) static const char TAG[] = "spi_flash";
 #include "esp32c6/rom/efuse.h"
 #if !CONFIG_SPI_FLASH_AUTO_SUSPEND
 #define ESP_FLASH_HOST_CONFIG_DEFAULT()  (memspi_host_config_t){ \
-    .host_id = SPI_HOST,\
+    .host_id = SPI1_HOST,\
     .speed = DEFAULT_FLASH_SPEED, \
     .cs_num = 0, \
     .iomux = true, \
@@ -123,7 +123,7 @@ __attribute__((unused)) static const char TAG[] = "spi_flash";
 }
 #else
 #define ESP_FLASH_HOST_CONFIG_DEFAULT()  (memspi_host_config_t){ \
-    .host_id = SPI_HOST,\
+    .host_id = SPI1_HOST,\
     .speed = DEFAULT_FLASH_SPEED, \
     .cs_num = 0, \
     .iomux = true, \
