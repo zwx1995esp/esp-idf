@@ -1,4 +1,4 @@
-// Copyright 2013-2020 Espressif Systems (Shanghai) PTE LTD
+// Copyright 2018 Espressif Systems (Shanghai) PTE LTD
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,8 +19,6 @@
 #include "esp_attr.h"
 #include "esp_efuse.h"
 #include "esp_log.h"
-#include "esp32c6/rom/cache.h"
-#include "esp32c6/cache_err_int.h"
 #include "riscv/riscv_interrupts.h"
 #include "riscv/interrupt.h"
 #include "esp_rom_uart.h"
@@ -29,9 +27,14 @@
 #include "soc/timer_group_reg.h"
 #include "soc/cpu.h"
 #include "soc/rtc.h"
+#include "soc/rtc_periph.h"
 #include "soc/syscon_reg.h"
 #include "soc/system_reg.h"
 #include "hal/wdt_hal.h"
+#include "cache_err_int.h"
+
+#include "esp32c6/rom/cache.h"
+#include "esp32c6/rom/rtc.h"
 
 /* "inner" restart function for after RTOS, interrupts & anything else on this
  * core are already stopped. Stalls other core, resets hardware,
@@ -97,6 +100,7 @@ void IRAM_ATTR esp_restart_noos(void)
                       SYSTEM_RW_BTMAC_RST | SYSTEM_RW_BTLP_RST | BLE_REG_REST_BIT
                       |BLE_PWR_REG_REST_BIT | BLE_BB_REG_REST_BIT);
 
+
     REG_WRITE(SYSTEM_CORE_RST_EN_REG, 0);
 
     // Reset timer/spi/uart
@@ -137,13 +141,4 @@ void IRAM_ATTR esp_restart_noos(void)
     while (true) {
         ;
     }
-}
-
-void esp_chip_info(esp_chip_info_t *out_info)
-{
-    memset(out_info, 0, sizeof(*out_info));
-    out_info->model = CHIP_ESP32C6;
-    out_info->revision = esp_efuse_get_chip_ver();
-    out_info->cores = 1;
-    out_info->features = CHIP_FEATURE_WIFI_BGN | CHIP_FEATURE_BLE;
 }

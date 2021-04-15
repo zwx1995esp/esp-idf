@@ -64,7 +64,6 @@
 #include "esp32c6/clk.h"
 #include "esp32c6/pm.h"
 #include "driver/gpio.h"
-#include "esp_private/sleep_modes.h"
 #endif
 
 #define MHZ (1000000)

@@ -1,5 +1,5 @@
 /**
- *                    ESP32-C3 Linker Script Memory Layout
+ *                    ESP32-C6 Linker Script Memory Layout
  * This file describes the memory layout (memory blocks) by virtual memory addresses.
  * This linker script is passed through the C preprocessor to include configuration options.
  * Please use preprocessor features sparingly!
@@ -10,7 +10,7 @@
 
 #define SRAM_IRAM_START     0x4037C000
 #define SRAM_DRAM_START     0x3FC7C000
-#define ICACHE_SIZE         0x4000 /* ICache size is fixed to 16KB on ESP32-C3 */
+#define ICACHE_SIZE         0x4000 /* ICache size is fixed to 16KB on ESP32-C6 */
 #define I_D_SRAM_OFFSET     (SRAM_IRAM_START - SRAM_DRAM_START)
 #define SRAM_DRAM_END       0x403D0000 - I_D_SRAM_OFFSET  /* 2nd stage bootloader iram_loader_seg start address */
 
@@ -19,12 +19,12 @@
 
 #define I_D_SRAM_SIZE       SRAM_DRAM_END - SRAM_DRAM_ORG
 
-#if CONFIG_ESP32C3_USE_FIXED_STATIC_RAM_SIZE
-ASSERT((CONFIG_ESP32C3_FIXED_STATIC_RAM_SIZE <= I_D_SRAM_SIZE), "Fixed static ram data does not fit.")
-#define DRAM0_0_SEG_LEN CONFIG_ESP3C3_FIXED_STATIC_RAM_SIZE
+#if CONFIG_ESP32C6_USE_FIXED_STATIC_RAM_SIZE
+ASSERT((CONFIG_ESP32C6_FIXED_STATIC_RAM_SIZE <= I_D_SRAM_SIZE), "Fixed static ram data does not fit.")
+#define DRAM0_0_SEG_LEN CONFIG_ESP3C6_FIXED_STATIC_RAM_SIZE
 #else
 #define DRAM0_0_SEG_LEN I_D_SRAM_SIZE
-#endif // CONFIG_ESP32C3_USE_FIXED_STATIC_RAM_SIZE
+#endif // CONFIG_ESP32C6_USE_FIXED_STATIC_RAM_SIZE
 MEMORY
 {
   /**
@@ -68,12 +68,12 @@ MEMORY
   rtc_iram_seg(RWX) :                org = 0x50000000, len = 0x2000
 }
 
-#if CONFIG_ESP32C3_USE_FIXED_STATIC_RAM_SIZE
+#if CONFIG_ESP32C6_USE_FIXED_STATIC_RAM_SIZE
 /* static data ends at defined address */
 _static_data_end = 0x3FCA0000 + DRAM0_0_SEG_LEN;
 #else
 _static_data_end = _bss_end;
-#endif // CONFIG_ESP32C3_USE_FIXED_STATIC_RAM_SIZE
+#endif // CONFIG_ESP32C6_USE_FIXED_STATIC_RAM_SIZE
 
 /* Heap ends at top of dram0_0_seg */
 _heap_end = 0x40000000;
@@ -82,7 +82,7 @@ _data_seg_org = ORIGIN(rtc_data_seg);
 
 /**
  *  The lines below define location alias for .rtc.data section
- *  As C3 only has RTC fast memory, this is not configurable like on other targets
+ *  As C6 only has RTC fast memory, this is not configurable like on other targets
  */
 REGION_ALIAS("rtc_data_seg", rtc_iram_seg );
 REGION_ALIAS("rtc_slow_seg", rtc_iram_seg );

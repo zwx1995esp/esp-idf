@@ -52,7 +52,7 @@ SECTIONS
    * named rtc_wake_stub*.c and the data marked with
    * RTC_DATA_ATTR, RTC_RODATA_ATTR attributes.
    * The memory location of the data is dependent on
-   * CONFIG_ESP32C3_RTCDATA_IN_FAST_MEM option.
+   * CONFIG_ESP32C6_RTCDATA_IN_FAST_MEM option.
    */
   .rtc.data :
   {
@@ -81,7 +81,7 @@ SECTIONS
    * and will be retained during deep sleep.
    * User data marked with RTC_NOINIT_ATTR will be placed
    * into this section. See the file "esp_attr.h" for more information.
-   * The memory location of the data is dependent on CONFIG_ESP32C3_RTCDATA_IN_FAST_MEM option.
+   * The memory location of the data is dependent on CONFIG_ESP32C6_RTCDATA_IN_FAST_MEM option.
    */
   .rtc_noinit (NOLOAD):
   {
@@ -225,6 +225,14 @@ SECTIONS
     *(.fini.literal)
     *(.fini)
     *(.gnu.version)
+
+    /** CPU will try to prefetch up to 16 bytes of
+      * of instructions. This means that any configuration (e.g. MMU, PMS) must allow
+      * safe access to up to 16 bytes after the last real instruction, add
+      * dummy bytes to ensure this
+      */
+    . += 16;
+
     _text_end = ABSOLUTE(.);
     _instruction_reserved_end = ABSOLUTE(.);
     _etext = .;
@@ -330,7 +338,7 @@ SECTIONS
   /* Marks the end of IRAM code segment */
   .iram0.text_end (NOLOAD) :
   {
-    /* C3 memprot requires 512 B alignment for split lines */
+    /* C6 memprot requires 512 B alignment for split lines */
     . = ALIGN (0x200);
     _iram_text_end = ABSOLUTE(.);
   } > iram0_0_seg
