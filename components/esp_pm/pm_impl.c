@@ -345,6 +345,8 @@ esp_err_t esp_pm_get_configuration(void* vconfig)
     esp_pm_config_esp32s3_t* config = (esp_pm_config_esp32s3_t*) vconfig;
 #elif CONFIG_IDF_TARGET_ESP32C3
     esp_pm_config_esp32c3_t* config = (esp_pm_config_esp32c3_t*) vconfig;
+#elif CONFIG_IDF_TARGET_ESP32C6
+    esp_pm_config_esp32c6_t* config = (esp_pm_config_esp32c6_t*) vconfig;
 #endif
 
     portENTER_CRITICAL(&s_switch_lock);
