@@ -97,7 +97,7 @@ void rtc_sleep_init(rtc_sleep_config_t cfg)
         CLEAR_PERI_REG_MASK(RTC_CNTL_REG, RTC_CNTL_REGULATOR_FORCE_PU);
         /* It's only a temporary configuration to set dbg 0 to make deepsleep run successfully when in high temperature.
            we will restore it to RTC_CNTL_DBG_ATTEN_DEEPSLEEP_DEFAULT when ECO chip come back.
-           TODO ESP32-C3 IDF-2568
+           TODO ESP32-C6 IDF-2568
          */
         REG_SET_FIELD(RTC_CNTL_BIAS_CONF_REG, RTC_CNTL_DBG_ATTEN_DEEP_SLP, 0);
         SET_PERI_REG_MASK(RTC_CNTL_DIG_PWC_REG, RTC_CNTL_DG_WRAP_PD_EN);
