@@ -177,10 +177,25 @@ typedef struct {
     uint32_t phy_11g:1;                   /**< bit: 1 flag to identify if 11g mode is enabled or not */
     uint32_t phy_11n:1;                   /**< bit: 2 flag to identify if 11n mode is enabled or not */
     uint32_t phy_lr:1;                    /**< bit: 3 flag to identify if low rate is enabled or not */
+#if CONFIG_IDF_TARGET_ESP32C6
+    uint32_t phy_11a:1;                   /**< bit: 4 flag to identify if 11b mode is enabled or not */
+    uint32_t phy_11an:1;                  /**< bit: 5 flag to identify if 11g mode is enabled or not */
+    uint32_t phy_11ac:1;                  /**< bit: 6 flag to identify if 11n mode is enabled or not */
+    uint32_t phy_11ax:1;                  /**< bit: 7 flag to identify if low rate is enabled or not */
+    uint32_t wps:1;                       /**< bit: 8 flag to identify if WPS is supported or not */
+    uint32_t ftm_responder:1;             /**< bit: 9 flag to identify if FTM is supported in responder mode */
+    uint32_t ftm_initiator:1;             /**< bit: 10 flag to identify if FTM is supported in initiator mode */
+    uint32_t bss_color:6;                 /**< bit: 11-16 is an unsigned integer whose value is the BSS Color of the BSS corresponding to the AP */
+    uint32_t partial_bss_color:1;         /**< bit: 17 flag to indicate if an AID assignment rule based on the BSS color */
+    uint32_t bss_color_disabled:1;        /**< bit: 18 flag to indicate if the use of BSS color is disabled */
+    uint32_t bssid_index:8;               /**< bit: 19-26 identifies the nontransmitted BSSID */
+    uint32_t reserved:5;                  /**< bit: 27..31 reserved */
+#else
     uint32_t wps:1;                       /**< bit: 4 flag to identify if WPS is supported or not */
     uint32_t ftm_responder:1;             /**< bit: 5 flag to identify if FTM is supported in responder mode */
     uint32_t ftm_initiator:1;             /**< bit: 6 flag to identify if FTM is supported in initiator mode */
     uint32_t reserved:25;                 /**< bit: 7..31 reserved */
+#endif
     wifi_country_t country;               /**< country information of AP */
 } wifi_ap_record_t;
 
@@ -210,6 +225,12 @@ typedef enum {
 #define WIFI_PROTOCOL_11G         2
 #define WIFI_PROTOCOL_11N         4
 #define WIFI_PROTOCOL_LR          8
+#if CONFIG_IDF_TARGET_ESP32C6
+#define WIFI_PROTOCOL_11A         (1 << 4)
+#define WIFI_PROTOCOL_11AN        (1 << 5)
+#define WIFI_PROTOCOL_11AC        (1 << 6)
+#define WIFI_PROTOCOL_11AX        (1 << 7)
+#endif
 
 typedef enum {
     WIFI_BW_HT20 = 1, /* Bandwidth is HT20 */
@@ -249,7 +270,12 @@ typedef struct {
     wifi_pmf_config_t pmf_cfg;    /**< Configuration for Protected Management Frame. Will be advertized in RSN Capabilities in RSN IE. */
     uint32_t rm_enabled:1;        /**< Whether Radio Measurements are enabled for the connection */
     uint32_t btm_enabled:1;       /**< Whether BSS Transition Management is enabled for the connection */
+#if CONFIG_IDF_TARGET_ESP32C6
+    uint32_t aid:12;              /**< aid, 0 for not connected */
+    uint32_t reserved:18;         /**< Reserved for future feature set */
+# else
     uint32_t reserved:30;         /**< Reserved for future feature set */
+# endif
 } wifi_sta_config_t;
 
 /** @brief Configuration data for ESP32 AP or STA.
@@ -271,7 +297,15 @@ typedef struct {
     uint32_t phy_11g:1;      /**< bit: 1 flag to identify if 11g mode is enabled or not */
     uint32_t phy_11n:1;      /**< bit: 2 flag to identify if 11n mode is enabled or not */
     uint32_t phy_lr:1;       /**< bit: 3 flag to identify if low rate is enabled or not */
+#if CONFIG_IDF_TARGET_ESP32C6
+    uint32_t phy_11a:1;      /**< bit: 4 flag to identify if 11b mode is enabled or not */
+    uint32_t phy_11an:1;     /**< bit: 5 flag to identify if 11g mode is enabled or not */
+    uint32_t phy_11ac:1;     /**< bit: 6 flag to identify if 11n mode is enabled or not */
+    uint32_t phy_11ax:1;     /**< bit: 7 flag to identify if low rate is enabled or not */
+    uint32_t reserved:24;    /**< bit: 8..31 reserved */
+#else
     uint32_t reserved:28;    /**< bit: 4..31 reserved */
+#endif
 } wifi_sta_info_t;
 
 #define ESP_WIFI_MAX_CONN_NUM  (10)       /**< max number of stations which can connect to ESP32 soft-AP */
@@ -623,6 +657,9 @@ typedef struct {
     uint8_t bssid[6];         /**< BSSID of connected AP*/
     uint8_t channel;          /**< channel of connected AP*/
     wifi_auth_mode_t authmode;/**< authentication mode used by AP*/
+#if CONFIG_IDF_TARGET_ESP32C6
+    uint16_t aid;             /**< aid */
+# endif
 } wifi_event_sta_connected_t;
 
 /** Argument structure for WIFI_EVENT_STA_DISCONNECTED event */

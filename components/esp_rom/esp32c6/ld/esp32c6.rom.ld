@@ -1495,6 +1495,7 @@ veryBigHexP256 = 0x3ff1ee48;
  ***************************************/
 
 /* Functions */
+/*
 esp_pp_rom_version_get = 0x400015ac;
 RC_GetBlockAckTime = 0x400015b0;
 ebuf_list_remove = 0x400015b4;
@@ -1651,7 +1652,9 @@ ppMapWaitTxq = 0x4000180c;
 ppProcessWaitingQueue = 0x40001810;
 ppDisableQueue = 0x40001814;
 pm_allow_tx = 0x40001818;
+*/
 /* Data (.data, .bss, .rodata) */
+/*
 our_instances_ptr = 0x3ff1ee44;
 pTxRx = 0x3fcdf968;
 lmacConfMib_ptr = 0x3fcdf964;
@@ -1700,13 +1703,14 @@ wifi_sta_rx_probe_req = 0x3fcdf8c4;
 g_tx_done_cb_func = 0x3fcdf8c0;
 g_per_conn_trc = 0x3fcdf874;
 s_encap_amsdu_func = 0x3fcdf870;
-
+*/
 
 /***************************************
  Group rom_net80211
  ***************************************/
 
 /* Functions */
+/*
 esp_net80211_rom_version_get = 0x4000181c;
 ampdu_dispatch = 0x40001820;
 ampdu_dispatch_all = 0x40001824;
@@ -1736,13 +1740,17 @@ ieee80211_classify = 0x40001880;
 ieee80211_copy_eb_header = 0x40001884;
 ieee80211_recycle_cache_eb = 0x40001888;
 ieee80211_search_node = 0x4000188c;
+*/
 roundup2 = 0x40001890;
+/*
 ieee80211_crypto_encap = 0x40001894;
 ieee80211_crypto_decap = 0x40001898;
 ieee80211_decap = 0x4000189c;
 ieee80211_set_tx_pti = 0x400018a0;
 wifi_is_started = 0x400018a4;
+*/
 /* Data (.data, .bss, .rodata) */
+/*
 net80211_funcs = 0x3fcdf86c;
 g_scan = 0x3fcdf868;
 g_chm = 0x3fcdf864;
@@ -1752,13 +1760,14 @@ g_tx_cacheq_ptr = 0x3fcdf858;
 s_netstack_free = 0x3fcdf854;
 mesh_rxcb = 0x3fcdf850;
 sta_rxcb = 0x3fcdf84c;
-
+*/
 
 /***************************************
  Group rom_coexist
  ***************************************/
 
 /* Functions */
+/*
 esp_coex_rom_version_get = 0x400018a8;
 coex_bt_release = 0x400018ac;
 coex_bt_request = 0x400018b0;
@@ -1779,14 +1788,16 @@ coex_schm_unlock = 0x400018e8;
 coex_status_get = 0x400018ec;
 coex_wifi_release = 0x400018f0;
 esp_coex_ble_conn_dynamic_prio_get = 0x400018f4;
+*/
 /* Data (.data, .bss, .rodata) */
+/*
 coex_env_ptr = 0x3fcdf848;
 coex_pti_tab_ptr = 0x3fcdf844;
 coex_schm_env_ptr = 0x3fcdf840;
 coexist_funcs = 0x3fcdf83c;
 g_coa_funcs_p = 0x3fcdf838;
 g_coex_param_ptr = 0x3fcdf834;
-
+*/
 
 /***************************************
  Group rom_phy
@@ -1794,6 +1805,7 @@ g_coex_param_ptr = 0x3fcdf834;
 
 /* Functions */
 phy_get_romfuncs = 0x400018f8;
+/*
 rom_abs_temp = 0x400018fc;
 rom_bb_bss_cbw40_dig = 0x40001900;
 rom_bb_wdg_test_en = 0x40001904;
@@ -1815,10 +1827,12 @@ rom_get_data_sat = 0x40001940;
 rom_get_i2c_read_mask = 0x40001944;
 rom_get_pwctrl_correct = 0x40001948;
 rom_get_rf_gain_qdb = 0x4000194c;
+*/
 rom_i2c_readReg = 0x40001950;
 rom_i2c_readReg_Mask = 0x40001954;
 rom_i2c_writeReg = 0x40001958;
 rom_i2c_writeReg_Mask = 0x4000195c;
+/*
 rom_index_to_txbbgain = 0x40001960;
 rom_iq_est_disable = 0x40001964;
 rom_iq_est_enable = 0x40001968;
@@ -1847,7 +1861,9 @@ rom_phy_get_rx_freq = 0x400019c0;
 rom_phy_set_bbfreq_init = 0x400019c4;
 rom_pow_usr = 0x400019c8;
 rom_pwdet_sar2_init = 0x400019cc;
+*/
 rom_read_hw_noisefloor = 0x400019d0;
+/*
 rom_read_sar_dout = 0x400019d4;
 rom_set_cal_rxdc = 0x400019d8;
 rom_set_chan_cal_interp = 0x400019dc;
@@ -1933,4 +1949,4 @@ rom_pll_correct_dcap = 0x40001b18;
 rom_phy_en_hw_set_freq = 0x40001b1c;
 rom_phy_dis_hw_set_freq = 0x40001b20;
 rom_pll_vol_cal = 0x40001b24;
-
+*/
