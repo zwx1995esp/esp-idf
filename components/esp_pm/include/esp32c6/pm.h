@@ -26,7 +26,7 @@ extern "C" {
 
 
 /**
- * @brief Power management config for ESP32C3
+ * @brief Power management config for ESP32C6
  *
  * Pass a pointer to this structure as an argument to esp_pm_configure function.
  */
