@@ -42,6 +42,9 @@
 #elif CONFIG_IDF_TARGET_ESP32C3
 #include "soc/rtc_cntl_reg.h"
 #include "soc/syscon_reg.h"
+#elif CONFIG_IDF_TARGET_ESP32C6
+#include "soc/rtc_cntl_reg.h"
+#include "soc/syscon_reg.h"
 #elif CONFIG_IDF_TARGET_ESP32S3
 #include "soc/rtc_cntl_reg.h"
 #include "soc/syscon_reg.h"
@@ -265,7 +268,7 @@ void esp_phy_disable(void)
         phy_digital_regs_store();
         // Disable PHY and RF.
         phy_close_rf();
-#if CONFIG_IDF_TARGET_ESP32C3 || CONFIG_IDF_TARGET_ESP32S2
+#if CONFIG_IDF_TARGET_ESP32C3 || CONFIG_IDF_TARGET_ESP32C6 || CONFIG_IDF_TARGET_ESP32S2
         // Disable PHY temperature sensor
         phy_xpd_tsens();
 #endif
