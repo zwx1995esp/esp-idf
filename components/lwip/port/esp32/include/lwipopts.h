@@ -196,7 +196,11 @@
  * PBUF_POOL_SIZE > IP_REASS_MAX_PBUFS so that the stack is still able to receive
  * packets even if the maximum amount of fragments is enqueued for reassembly!
  */
+#if CONFIG_IDF_TARGET_ESP32C6 //sigma, case 5.21.1: framesize: 16384 bytes
+#define IP_REASS_MAX_PBUFS              15
+#else
 #define IP_REASS_MAX_PBUFS              10
+#endif
 
 /**
  * IP_FORWARD==1: Enables the ability to forward IP packets across network
