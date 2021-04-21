@@ -102,7 +102,7 @@ static inline void gpio_ll_set_intr_type(gpio_dev_t *hw, gpio_num_t gpio_num, gp
   */
 static inline void gpio_ll_get_intr_status(gpio_dev_t *hw, uint32_t core_id, uint32_t *status)
 {
-    *status = hw->pcpu_int.intr;
+    *status = hw->pcpu_int;
 }
 
 /**
@@ -128,7 +128,7 @@ static inline void gpio_ll_iomux_func_sel(uint32_t pin_name, uint32_t func)
   */
 static inline void gpio_ll_get_intr_status_high(gpio_dev_t *hw, uint32_t core_id, uint32_t *status)
 {
-    *status = 0; // Less than 32 GPIOs in ESP32-C3
+    *status = hw->pcpu_int1.intr;
 }
 
 /**
@@ -139,7 +139,7 @@ static inline void gpio_ll_get_intr_status_high(gpio_dev_t *hw, uint32_t core_id
   */
 static inline void gpio_ll_clear_intr_status(gpio_dev_t *hw, uint32_t mask)
 {
-    hw->status_w1tc.status_w1tc = mask;
+    hw->status_w1tc = mask;
 }
 
 /**
@@ -150,7 +150,7 @@ static inline void gpio_ll_clear_intr_status(gpio_dev_t *hw, uint32_t mask)
   */
 static inline void gpio_ll_clear_intr_status_high(gpio_dev_t *hw, uint32_t mask)
 {
-    // Not supported on C3
+    hw->status1_w1tc.status1_w1tc = mask;
 }
 
 /**
@@ -210,7 +210,12 @@ static inline void gpio_ll_input_enable(gpio_dev_t *hw, gpio_num_t gpio_num)
   */
 static inline void gpio_ll_output_disable(gpio_dev_t *hw, gpio_num_t gpio_num)
 {
-    hw->enable_w1tc.enable_w1tc = (0x1 << gpio_num);
+    if (gpio_num < 32) {
+        hw->enable_w1tc = (0x1 << gpio_num);
+    } else {
+        hw->enable1_w1tc.enable1_w1tc = (0x1 << (gpio_num - 32));
+    }
+    
     // Ensure no other output signal is routed via GPIO matrix to this pin
     REG_WRITE(GPIO_FUNC0_OUT_SEL_CFG_REG + (gpio_num * 4),
               SIG_GPIO_OUT_IDX);
@@ -224,7 +229,11 @@ static inline void gpio_ll_output_disable(gpio_dev_t *hw, gpio_num_t gpio_num)
   */
 static inline void gpio_ll_output_enable(gpio_dev_t *hw, gpio_num_t gpio_num)
 {
-    hw->enable_w1ts.enable_w1ts = (0x1 << gpio_num);
+    if (gpio_num < 32) {
+        hw->enable_w1ts = (0x1 << gpio_num);
+    } else {
+        hw->enable1_w1ts.data = (0x1 << (gpio_num - 32));
+    }
 }
 
 /**
@@ -258,11 +267,20 @@ static inline void gpio_ll_od_enable(gpio_dev_t *hw, gpio_num_t gpio_num)
  */
 static inline void gpio_ll_set_level(gpio_dev_t *hw, gpio_num_t gpio_num, uint32_t level)
 {
-    if (level) {
-        hw->out_w1ts.out_w1ts = (1 << gpio_num);
+    if (gpio_num < 32) {
+        if (level) {
+            hw->out_w1ts = (1 << gpio_num);
+        } else {
+            hw->out_w1tc = (1 << gpio_num);
+        }
     } else {
-        hw->out_w1tc.out_w1tc = (1 << gpio_num);
+        if (level) {
+            hw->out1_w1ts.out1_w1ts = (1 << (gpio_num - 32));
+        } else {
+            hw->out1_w1tc.out1_w1tc = (1 << (gpio_num - 32));
+        }
     }
+    
 }
 
 /**
@@ -279,7 +297,11 @@ static inline void gpio_ll_set_level(gpio_dev_t *hw, gpio_num_t gpio_num, uint32
  */
 static inline int gpio_ll_get_level(gpio_dev_t *hw, gpio_num_t gpio_num)
 {
-    return (hw->in.data >> gpio_num) & 0x1;
+    if (gpio_num < 32) {
+        return (hw->in >> gpio_num) & 0x1;
+    } else {
+        return (hw->in1.data >> (gpio_num - 32)) & 0x1;
+    }
 }
 
 /**

@@ -1,4 +1,4 @@
-// Copyright 2020 Espressif Systems (Shanghai) PTE LTD
+// Copyright 2017-2018 Espressif Systems (Shanghai) PTE LTD
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,190 +13,168 @@
 // limitations under the License.
 #ifndef _SOC_GPIO_STRUCT_H_
 #define _SOC_GPIO_STRUCT_H_
-#include <stdint.h>
+
+
 #ifdef __cplusplus
 extern "C" {
 #endif
+#include "soc.h"
 
 typedef volatile struct {
-    uint32_t bt_select;                               /**/
+    uint32_t bt_select;
+    uint32_t out;
+    uint32_t out_w1ts;
+    uint32_t out_w1tc;
     union {
         struct {
-            uint32_t data:         26;
-            uint32_t reserved26:    6;
+            uint32_t data                          :    18;  /*GPIO output register for GPIO32-49*/
+            uint32_t reserved18                    :    14;  /*reserved*/
         };
         uint32_t val;
-    } out;
+    } out1;
     union {
         struct {
-            uint32_t out_w1ts:  26;
-            uint32_t reserved26: 6;
+            uint32_t out1_w1ts                     :    18;  /*GPIO output set register for GPIO32-49*/
+            uint32_t reserved18                    :    14;  /*reserved*/
         };
         uint32_t val;
-    } out_w1ts;
+    } out1_w1ts;
     union {
         struct {
-            uint32_t out_w1tc:  26;
-            uint32_t reserved26: 6;
+            uint32_t out1_w1tc                     :    18;  /*GPIO output clear register for GPIO32-49*/
+            uint32_t reserved18                    :    14;  /*reserved*/
         };
         uint32_t val;
-    } out_w1tc;
-    uint32_t reserved_10;
-    uint32_t reserved_14;
-    uint32_t reserved_18;
+    } out1_w1tc;
     union {
         struct {
-            uint32_t sel:        8;
-            uint32_t reserved8: 24;
+            uint32_t sel                           :    8;  /*GPIO sdio select register*/
+            uint32_t reserved8                     :    24;  /*reserved*/
         };
         uint32_t val;
     } sdio_select;
+    uint32_t enable;
+    uint32_t enable_w1ts;
+    uint32_t enable_w1tc;
     union {
         struct {
-            uint32_t data:       26;
-            uint32_t reserved26:  6;
+            uint32_t data                          :    18;  /*GPIO output enable register for GPIO32-49*/
+            uint32_t reserved18                    :    14;  /*reserved*/
         };
         uint32_t val;
-    } enable;
+    } enable1;
     union {
         struct {
-            uint32_t enable_w1ts:26;
-            uint32_t reserved26:  6;
+            uint32_t data                          :    18;  /*GPIO output enable set register for GPIO32-49*/
+            uint32_t reserved18                    :    14;  /*reserved*/
         };
         uint32_t val;
-    } enable_w1ts;
+    } enable1_w1ts;
     union {
         struct {
-            uint32_t enable_w1tc:26;
-            uint32_t reserved26:  6;
+            uint32_t enable1_w1tc                  :    18;  /*GPIO output enable clear register for GPIO32-49*/
+            uint32_t reserved18                    :    14;  /*reserved*/
         };
         uint32_t val;
-    } enable_w1tc;
-    uint32_t reserved_2c;
-    uint32_t reserved_30;
-    uint32_t reserved_34;
+    } enable1_w1tc;
     union {
         struct {
-            uint32_t strapping: 16;
-            uint32_t reserved16:16;
+            uint32_t strapping                     :    16;  /*pad strapping register*/
+            uint32_t reserved16                    :    16;  /*reserved*/
         };
         uint32_t val;
     } strap;
+    uint32_t in;
     union {
         struct {
-            uint32_t data:        26;
-            uint32_t reserved26:   6;
+            uint32_t data                          :    18;  /*GPIO input register for GPIO32-49*/
+            uint32_t reserved18                    :    14;  /*reserved*/
         };
         uint32_t val;
-    } in;
-    uint32_t reserved_40;
+    } in1;
+    uint32_t status;
+    uint32_t status_w1ts;
+    uint32_t status_w1tc;
     union {
         struct {
-            uint32_t intr_st:         26;
-            uint32_t reserved26:       6;
+            uint32_t intr_st                       :    18;  /*GPIO interrupt status register for GPIO32-49*/
+            uint32_t reserved18                    :    14;  /*reserved*/
         };
         uint32_t val;
-    } status;
+    } status1;
     union {
         struct {
-            uint32_t status_w1ts:26;
-            uint32_t reserved26:  6;
+            uint32_t status1_w1ts                  :    18;  /*GPIO interrupt status set register for GPIO32-49*/
+            uint32_t reserved18                    :    14;  /*reserved*/
         };
         uint32_t val;
-    } status_w1ts;
+    } status1_w1ts;
     union {
         struct {
-            uint32_t status_w1tc:26;
-            uint32_t reserved26:  6;
+            uint32_t status1_w1tc                  :    18;  /*GPIO interrupt status clear register for GPIO32-49*/
+            uint32_t reserved18                    :    14;  /*reserved*/
         };
         uint32_t val;
-    } status_w1tc;
-    uint32_t reserved_50;
-    uint32_t reserved_54;
-    uint32_t reserved_58;
+    } status1_w1tc;
+    uint32_t pcpu_int;
+    uint32_t pcpu_nmi_int;
+    uint32_t cpusdio_int;
     union {
         struct {
-            uint32_t intr:      26;
-            uint32_t reserved26: 6;
+            uint32_t intr                          :    18;  /*GPIO PRO_CPU interrupt status register for GPIO32-49*/
+            uint32_t reserved18                    :    14;  /*reserved*/
         };
         uint32_t val;
-    } pcpu_int;
+    } pcpu_int1;
     union {
         struct {
-            uint32_t intr:          26;
-            uint32_t reserved26:     6;
+            uint32_t intr                          :    18;  /*GPIO PRO_CPU(not shielded) interrupt status register for GPIO32-49*/
+            uint32_t reserved18                    :    14;  /*reserved*/
         };
         uint32_t val;
-    } pcpu_nmi_int;
+    } pcpu_nmi_int1;
     union {
         struct {
-            uint32_t intr:      26;
-            uint32_t reserved26: 6;
+            uint32_t intr                          :    18;  /*GPIO CPUSDIO interrupt status register for GPIO32-49*/
+            uint32_t reserved18                    :    14;  /*reserved*/
         };
         uint32_t val;
-    } cpusdio_int;
-    uint32_t reserved_68;
-    uint32_t reserved_6c;
-    uint32_t reserved_70;
+    } cpusdio_int1;
     union {
         struct {
-            uint32_t sync2_bypass:       2;
-            uint32_t pad_driver:         1;
-            uint32_t sync1_bypass:       2;
-            uint32_t reserved5:          2;
-            uint32_t int_type:           3;
-            uint32_t wakeup_enable:      1;
-            uint32_t config:             2;
-            uint32_t int_ena:            5;
-            uint32_t reserved18:        14;
+            uint32_t pin_sync2_bypass                  :    2;  /*set GPIO input_sync2 signal mode. 0:disable. 1:trigger at negedge. 2or3:trigger at posedge.*/
+            uint32_t pad_driver                        :    1;  /*set this bit to select pad driver. 1:open-drain. 0:normal.*/
+            uint32_t sync1_bypass                      :    2;  /*set GPIO input_sync1 signal mode. 0:disable. 1:trigger at negedge. 2or3:trigger at posedge.*/
+            uint32_t reserved5                         :    2;  /*reserved*/
+            uint32_t int_type                          :    3;  /*set this value to choose interrupt mode. 0:disable GPIO interrupt. 1:trigger at posedge. 2:trigger at negedge. 3:trigger at any edge. 4:valid at low level. 5:valid at high level*/
+            uint32_t wakeup_enable                     :    1;  /*set this bit to enable GPIO wakeup.(can only wakeup CPU from Light-sleep Mode)*/
+            uint32_t pin_config                        :    2;  /*reserved*/
+            uint32_t int_ena                           :    5;  /*set bit 13 to enable CPU interrupt. set bit 14 to enable CPU(not shielded) interrupt.*/
+            uint32_t reserved18                        :    14;  /*reserved*/
         };
         uint32_t val;
-    } pin[26];
-    uint32_t reserved_dc;
-    uint32_t reserved_e0;
-    uint32_t reserved_e4;
-    uint32_t reserved_e8;
-    uint32_t reserved_ec;
-    uint32_t reserved_f0;
-    uint32_t reserved_f4;
-    uint32_t reserved_f8;
-    uint32_t reserved_fc;
-    uint32_t reserved_100;
-    uint32_t reserved_104;
-    uint32_t reserved_108;
-    uint32_t reserved_10c;
-    uint32_t reserved_110;
-    uint32_t reserved_114;
-    uint32_t reserved_118;
-    uint32_t reserved_11c;
-    uint32_t reserved_120;
-    uint32_t reserved_124;
-    uint32_t reserved_128;
-    uint32_t reserved_12c;
-    uint32_t reserved_130;
-    uint32_t reserved_134;
-    uint32_t reserved_138;
+    } pin[49];
     uint32_t reserved_13c;
     uint32_t reserved_140;
     uint32_t reserved_144;
     uint32_t reserved_148;
+    uint32_t status_next;
     union {
         struct {
-            uint32_t intr_st_next:         26;
-            uint32_t reserved26:            6;
+            uint32_t intr_st_next                  :    18;  /*GPIO interrupt source register for GPIO32-49*/
+            uint32_t reserved18                    :    14;  /*reserved*/
         };
         uint32_t val;
-    } status_next;
-    uint32_t reserved_150;
+    } status_next1;
     union {
         struct {
-            uint32_t func_sel:         5;
-            uint32_t sig_in_inv:       1;
-            uint32_t sig_in_sel:       1;
-            uint32_t reserved7:       25;
+            uint32_t func_sel                      :    6;  /*set this value: s=0-49: connect GPIO[s] to this port. s=0x38: set this port always high level. s=0x3C: set this port always low level.*/
+            uint32_t sig_in_inv_sel                :    1;  /*set this bit to invert input signal. 1:invert. 0:not invert.*/
+            uint32_t sig_in_sel                    :    1;  /*set this bit to bypass GPIO. 1:do not bypass GPIO. 0:bypass GPIO.*/
+            uint32_t reserved8                     :    24;  /*reserved*/
         };
         uint32_t val;
-    } func_in_sel_cfg[128];
+    } func_in_sel_cfg[127];
     uint32_t reserved_354;
     uint32_t reserved_358;
     uint32_t reserved_35c;
@@ -327,46 +305,22 @@ typedef volatile struct {
     uint32_t reserved_550;
     union {
         struct {
-            uint32_t func_sel:          8;
-            uint32_t inv_sel:           1;
-            uint32_t oen_sel:           1;
-            uint32_t oen_inv_sel:       1;
-            uint32_t reserved11:       21;
+            uint32_t func_sel                      :    9;  /*The value of the bits: 0<=s<=128. Set the value to select output signal. s=0-127: output of GPIO[n] equals input of peripheral[s]. s=128: output of GPIO[n] equals GPIO_OUT_REG[n]. */
+            uint32_t func_out_inv_sel              :    1;  /*set this bit to invert output signal.1:invert.0:not invert.*/
+            uint32_t oen_sel                       :    1;  /*set this bit to select output enable signal.1:use GPIO_ENABLE_REG[n] as output enable signal.0:use peripheral output enable signal.*/
+            uint32_t oen_inv_sel                   :    1;  /*set this bit to invert output enable signal.1:invert.0:not invert.*/
+            uint32_t reserved12                    :    20;  /*reserved*/
         };
         uint32_t val;
-    } func_out_sel_cfg[26];
-    uint32_t reserved_5bc;
-    uint32_t reserved_5c0;
-    uint32_t reserved_5c4;
-    uint32_t reserved_5c8;
-    uint32_t reserved_5cc;
-    uint32_t reserved_5d0;
-    uint32_t reserved_5d4;
-    uint32_t reserved_5d8;
-    uint32_t reserved_5dc;
-    uint32_t reserved_5e0;
-    uint32_t reserved_5e4;
-    uint32_t reserved_5e8;
-    uint32_t reserved_5ec;
-    uint32_t reserved_5f0;
-    uint32_t reserved_5f4;
-    uint32_t reserved_5f8;
-    uint32_t reserved_5fc;
-    uint32_t reserved_600;
-    uint32_t reserved_604;
-    uint32_t reserved_608;
-    uint32_t reserved_60c;
-    uint32_t reserved_610;
-    uint32_t reserved_614;
-    uint32_t reserved_618;
+    } func_out_sel_cfg[49];
     uint32_t reserved_61c;
     uint32_t reserved_620;
     uint32_t reserved_624;
     uint32_t reserved_628;
     union {
         struct {
-            uint32_t clk_en:     1;
-            uint32_t reserved1: 31;
+            uint32_t clk_en                        :    1;  /*set this bit to enable GPIO clock gate*/
+            uint32_t reserved1                     :    31;  /*reserved*/
         };
         uint32_t val;
     } clock_gate;
@@ -423,8 +377,8 @@ typedef volatile struct {
     uint32_t reserved_6f8;
     union {
         struct {
-            uint32_t date:      28;
-            uint32_t reserved28: 4;
+            uint32_t date                          :    28;  /*version register*/
+            uint32_t reserved28                    :    4;  /*reserved*/
         };
         uint32_t val;
     } date;
@@ -434,4 +388,6 @@ extern gpio_dev_t GPIO;
 }
 #endif
 
-#endif  /* _SOC_GPIO_STRUCT_H_ */
+
+
+#endif /*_SOC_GPIO_STRUCT_H_ */
