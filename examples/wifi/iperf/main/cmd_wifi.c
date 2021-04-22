@@ -73,14 +73,16 @@ static void scan_done_handler(void* arg, esp_event_base_t event_base,
         ESP_LOGE(TAG, "Failed to malloc buffer to print scan results");
         return;
     }
-
+    ESP_LOGI(TAG,"sta scan complete");
     if (esp_wifi_scan_get_ap_records(&sta_number, (wifi_ap_record_t *) ap_list_buffer) == ESP_OK) {
         for (i = 0; i < sta_number; i++) {
 #if CONFIG_IDF_TARGET_ESP32C6
+            static char ssid_rssi[45];
+            sprintf(ssid_rssi, "[%s][rssi=%d]", ap_list_buffer[i].ssid, ap_list_buffer[i].rssi);
             if (ap_list_buffer[i].phy_11ax) {
                 ESP_LOGI(TAG,
-                       "[%2d][%32s][rssi=%2d]authmode:0x%x, channel:%2d[%d], phymode:%4s, "MACSTR", bssid-index:%d, bss_color:%d, disabled:%d",
-                       i, ap_list_buffer[i].ssid, ap_list_buffer[i].rssi, ap_list_buffer[i].authmode,
+                       "[%2d]%45s authmode:0x%x, channel:%2d[%d], phymode:%4s, "MACSTR", bssid-index:%d, bss_color:%d, disabled:%d",
+                       i, ssid_rssi, ap_list_buffer[i].authmode,
                        ap_list_buffer[i].primary, ap_list_buffer[i].second,
                        ap_list_buffer[i].phy_11ax ? "11ax" : (ap_list_buffer[i].phy_11n ? "11n" :
                                (ap_list_buffer[i].phy_11g ? "11g" : (ap_list_buffer[i].phy_11b ? "11b" : ""))),
@@ -88,8 +90,8 @@ static void scan_done_handler(void* arg, esp_event_base_t event_base,
                        ap_list_buffer[i].bss_color, ap_list_buffer[i].bss_color_disabled);
             } else {
                 ESP_LOGI(TAG,
-                        "[%2d][%32s][rssi=%2d]authmode:0x%x, channel:%2d[%d], phymode:%4s, "MACSTR"",
-                        i, ap_list_buffer[i].ssid, ap_list_buffer[i].rssi, ap_list_buffer[i].authmode,
+                        "[%2d]%45s authmode:0x%x, channel:%2d[%d], phymode:%4s, "MACSTR"",
+                        i, ssid_rssi, ap_list_buffer[i].authmode,
                         ap_list_buffer[i].primary, ap_list_buffer[i].second,
                         ap_list_buffer[i].phy_11ax ? "11ax" : (ap_list_buffer[i].phy_11n ? "11n" :
                                 (ap_list_buffer[i].phy_11g ? "11g" : (ap_list_buffer[i].phy_11b ? "11b" : ""))),
