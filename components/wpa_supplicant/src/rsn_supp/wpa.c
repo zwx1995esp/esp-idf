@@ -193,8 +193,11 @@ static inline int   wpa_sm_ether_send( struct wpa_sm *sm, const u8 *dest, u16 pr
     memcpy(eth->h_dest, dest, ETH_ALEN);
     memcpy(eth->h_source, sm->own_addr, ETH_ALEN);
     eth->h_proto = host_to_be16(proto);
+#if CONFIG_IDF_TARGET_ESP32C6
+    sm->sendto(buffer, sizeof(struct l2_ethhdr) + data_len, sm->msg_id);
+#else
     sm->sendto(buffer, sizeof(struct l2_ethhdr) + data_len);
-
+#endif
     return 0;
 }
 
@@ -548,7 +551,9 @@ int   wpa_supplicant_send_2_of_4(struct wpa_sm *sm, const unsigned char *dst,
     memcpy(reply->key_nonce, nonce, WPA_NONCE_LEN);
 
     wpa_printf(MSG_DEBUG, "WPA Send EAPOL-Key 2/4\n");
-
+#if CONFIG_IDF_TARGET_ESP32C6
+    sm->msg_id = 2;
+#endif
     wpa_eapol_key_send(sm, ptk->kck, ver, dst, ETH_P_EAPOL,
                rbuf, rlen, reply->key_mic);
     wpa_sm_free_eapol(rbuf);
@@ -1165,6 +1170,9 @@ int   ieee80211w_set_keys(struct wpa_sm *sm,
         memcpy(reply + 1, kde, kde_len);
 
     wpa_printf(MSG_DEBUG, "WPA Send EAPOL-Key 4/4\n");
+#if CONFIG_IDF_TARGET_ESP32C6
+    sm->msg_id = 4;
+#endif
     wpa_eapol_key_send(sm, ptk->kck, ver, dst, ETH_P_EAPOL,
                rbuf, rlen, reply->key_mic);
     wpa_sm_free_eapol(rbuf);
@@ -2371,10 +2379,24 @@ void eapol_txcb(void *eb)
         return;
     }
 
+#if CONFIG_IDF_TARGET_ESP32C6
+    uint8_t* buf = (uint8_t*) eb;
+    uint8_t msg_id = buf[48]; //TODO
+#endif
     switch(WPA_SM_STATE(sm)) {
         case WPA_FIRST_HALF_4WAY_HANDSHAKE:
+#if CONFIG_IDF_TARGET_ESP32C6
+            if (msg_id != 2) {
+                break;
+            }
+#endif
             break;
         case WPA_LAST_HALF_4WAY_HANDSHAKE:
+#if CONFIG_IDF_TARGET_ESP32C6
+            if (msg_id != 4) {
+                break;
+            }
+#endif
             if (sm->txcb_flags & WPA_4_4_HANDSHAKE_BIT) {
                 sm->txcb_flags &= ~WPA_4_4_HANDSHAKE_BIT;
                 isdeauth = wpa_supplicant_send_4_of_4_txcallback(sm);

@@ -162,6 +162,10 @@ void esp_wifi_internal_free_rx_buffer(void* buffer);
   */
 int esp_wifi_internal_tx(wifi_interface_t wifi_if, void *buffer, uint16_t len);
 
+#if CONFIG_IDF_TARGET_ESP32C6
+int esp_wifi_eapol_tx(wifi_interface_t wifi_if, void *buffer, uint16_t len, uint8_t msg_id);
+#endif
+
 /**
   * @brief     The net stack buffer reference counter callback function
   *

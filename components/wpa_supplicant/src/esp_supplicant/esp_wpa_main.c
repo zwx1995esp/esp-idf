@@ -64,10 +64,17 @@ int  wpa_get_key(uint8_t *ifx, int *alg, u8 *addr, int *key_idx,
 /* fix buf for tx for now */
 #define WPA_TX_MSG_BUFF_MAXLEN 200
 
+#if CONFIG_IDF_TARGET_ESP32C6
+void  wpa_sendto_wrapper(void *buffer, u16 len, uint8_t msg_id)
+{
+    esp_wifi_eapol_tx(0, buffer, len, msg_id);
+}
+#else
 void  wpa_sendto_wrapper(void *buffer, u16 len)
 {
     esp_wifi_internal_tx(0, buffer, len);
 }
+#endif
 
 void  wpa_deauthenticate(u8 reason_code)
 {

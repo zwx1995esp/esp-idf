@@ -76,8 +76,12 @@ struct wpa_sm {
     struct install_key install_ptk;
     struct install_key install_gtk;
     int  key_entry_valid;   //present current avaliable entry for bssid, for pairkey:0,5,10,15,20, gtk: pairkey_no+i (i:1~4)
-
+#if CONFIG_IDF_TARGET_ESP32C6
+    uint8_t msg_id;
+    void (* sendto) (void *buffer, uint16_t len, uint8_t msg_id);
+#else
     void (* sendto) (void *buffer, uint16_t len);
+#endif
     void (*config_assoc_ie) (u8 proto, u8 *assoc_buf, u32 assoc_wpa_ie_len);
     void (*install_ppkey) (enum wpa_alg alg, u8 *addr, int key_idx, int set_tx,
                u8 *seq, unsigned int seq_len, u8 *key, unsigned int key_len, int key_entry_valid);
@@ -139,8 +143,11 @@ struct wpa_sm {
  * example on how this can be done.
  */
 
-
+#if CONFIG_IDF_TARGET_ESP32C6
+typedef void (* WPA_SEND_FUNC)(void *buffer, u16 len, uint8_t msg_id);
+#else
 typedef void (* WPA_SEND_FUNC)(void *buffer, u16 len);
+#endif
 
 typedef void (* WPA_SET_ASSOC_IE)(u8 proto, u8 *assoc_buf, u32 assoc_wpa_ie_len);
 
