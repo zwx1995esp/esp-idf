@@ -77,10 +77,10 @@ static void scan_done_handler(void* arg, esp_event_base_t event_base,
     if (esp_wifi_scan_get_ap_records(&sta_number, (wifi_ap_record_t *) ap_list_buffer) == ESP_OK) {
         for (i = 0; i < sta_number; i++) {
 #if CONFIG_IDF_TARGET_ESP32C6
-            static char ssid_rssi[45];
+            char ssid_rssi[45] = { 0, };
             sprintf(ssid_rssi, "[%s][rssi=%d]", ap_list_buffer[i].ssid, ap_list_buffer[i].rssi);
             if (ap_list_buffer[i].phy_11ax) {
-                ESP_LOGI(TAG,
+                ESP_LOGW(TAG,
                        "[%2d]%45s authmode:0x%x, channel:%2d[%d], phymode:%4s, "MACSTR", bssid-index:%d, bss_color:%d, disabled:%d",
                        i, ssid_rssi, ap_list_buffer[i].authmode,
                        ap_list_buffer[i].primary, ap_list_buffer[i].second,
@@ -186,6 +186,9 @@ static bool wifi_cmd_sta_join(const char* ssid, const char* pass)
 
     reconnect = true;
     ESP_ERROR_CHECK( esp_wifi_set_mode(WIFI_MODE_STA) );
+#if CONFIG_IDF_TARGET_ESP32C6
+    ESP_ERROR_CHECK( esp_wifi_set_ps(WIFI_PS_NONE));
+#endif
     ESP_ERROR_CHECK( esp_wifi_set_config(WIFI_IF_STA, &wifi_config) );
     esp_wifi_connect();
 
