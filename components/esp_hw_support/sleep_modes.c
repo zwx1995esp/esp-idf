@@ -112,10 +112,7 @@
 #endif
 
 #define LIGHT_SLEEP_TIME_OVERHEAD_US        DEFAULT_HARDWARE_OUT_OVERHEAD_US
-#if defined(CONFIG_ESP32_RTC_CLK_SRC_EXT_CRYS)   || \
-    defined(CONFIG_ESP32S2_RTC_CLK_SRC_EXT_CRYS) || \
-    defined(CONFIG_ESP32C3_RTC_CLK_SRC_EXT_CRYS) || \
-    defined(CONFIG_ESP32S3_RTC_CLK_SRC_EXT_CRYS)
+#ifdef CONFIG_ESP_SYSTEM_RTC_EXT_XTAL
 #define DEEP_SLEEP_TIME_OVERHEAD_US         (650 + 100 * 240 / DEFAULT_CPU_FREQ_MHZ)
 #else
 #define DEEP_SLEEP_TIME_OVERHEAD_US         (250 + 100 * 240 / DEFAULT_CPU_FREQ_MHZ)
@@ -704,7 +701,7 @@ esp_err_t esp_light_sleep_start(void)
     uint32_t pd_flags = get_power_down_flags();
 
     // Re-calibrate the RTC Timer clock
-#if defined(CONFIG_ESP32_RTC_CLK_SRC_EXT_CRYS) || defined(CONFIG_ESP32S2_RTC_CLK_SRC_EXT_CRYS) || defined(CONFIG_ESP32C3_RTC_CLK_SRC_EXT_CRYS)
+#ifdef CONFIG_ESP_SYSTEM_RTC_EXT_XTAL
     uint64_t time_per_us = 1000000ULL;
     s_config.rtc_clk_cal_period = (time_per_us << RTC_CLK_CAL_FRACT) / rtc_clk_slow_freq_get_hz();
 #elif defined(CONFIG_ESP32S2_RTC_CLK_SRC_INT_RC)
