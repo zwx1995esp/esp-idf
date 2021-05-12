@@ -22,5 +22,5 @@ void esp_chip_info(esp_chip_info_t *out_info)
     out_info->model = CHIP_ESP32C6;
     out_info->revision = esp_efuse_get_chip_ver();
     out_info->cores = 1;
-    out_info->features = CHIP_FEATURE_WIFI_BGN | CHIP_FEATURE_BLE;
+    out_info->features = CHIP_FEATURE_WIFI_AX | CHIP_FEATURE_WIFI_BGN | CHIP_FEATURE_BLE;
 }

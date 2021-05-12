@@ -70,9 +70,16 @@ static int get_version(int argc, char **argv)
     esp_chip_info(&info);
     printf("IDF Version:%s\r\n", esp_get_idf_version());
     printf("Chip info:\r\n");
-    printf("\tmodel:%s\r\n", info.model == CHIP_ESP32 ? "ESP32" : "Unknow");
+    printf("\tmodel:%s\r\n",
+            info.model == CHIP_ESP32 ? "ESP32" :
+            info.model == CHIP_ESP32S2 ? "ESP32S2" :
+            info.model == CHIP_ESP32S3 ? "ESP32S3" :
+            info.model == CHIP_ESP32C3 ? "ESP32C3" :
+            info.model == CHIP_ESP32C6 ? "ESP32C6" :
+            "Unknow");
     printf("\tcores:%d\r\n", info.cores);
     printf("\tfeature:%s%s%s%s%d%s\r\n",
+           info.features & CHIP_FEATURE_WIFI_AX ? "/802.11ax" :
            info.features & CHIP_FEATURE_WIFI_BGN ? "/802.11bgn" : "",
            info.features & CHIP_FEATURE_BLE ? "/BLE" : "",
            info.features & CHIP_FEATURE_BT ? "/BT" : "",
