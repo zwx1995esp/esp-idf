@@ -41,6 +41,13 @@ menu "IEEE 802.15.4"
                 configure the CCA mode to Carrier sense AND energy above threshold
     endchoice
 
+    config IEEE802154_HARDCODE_PTI
+        bool "Config IEEE802154 PTI hardcode."
+        depends on IEEE802154_ENABLED
+        default y
+            help
+                this configure is only used for NL project.
+
     config IEEE802154_CCA_MODE
         depends on IEEE802154_ENABLED
         int
