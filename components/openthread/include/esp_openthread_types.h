@@ -112,10 +112,10 @@ typedef struct {
  *
  */
 typedef enum {
-    RADIO_MODE_NATIVE = 0x0,   /*!< Use the native 15.4 radio */
-    RADIO_MODE_UART_RCP,       /*!< UART connection to a 15.4 capable radio co-processor (RCP) */
-    RADIO_MODE_SPI_RCP,        /*!< SPI connection to a 15.4 capable radio co-processor (RCP) */
-    RADIO_MODE_MAX,            /*!< Using for parameter check */
+    OT_RADIO_MODE_NATIVE = 0x0,   /*!< Use the native 15.4 radio */
+    OT_RADIO_MODE_UART_RCP,       /*!< UART connection to a 15.4 capable radio co-processor (RCP) */
+    OT_RADIO_MODE_SPI_RCP,        /*!< SPI connection to a 15.4 capable radio co-processor (RCP) */
+    OT_RADIO_MODE_MAX,            /*!< Using for parameter check */
 } esp_openthread_radio_mode_t;
 
 /**
@@ -123,12 +123,12 @@ typedef enum {
  *
  */
 typedef enum {
-    HOST_CONNECTION_MODE_NONE = 0x0,     /*!< Disable host connection */
-    HOST_CONNECTION_MODE_CLI_UART,       /*!< CLI UART connection to the host */
-    HOST_CONNECTION_MODE_CLI_USB,        /*!< CLI USB connection to the host */
-    HOST_CONNECTION_MODE_RCP_UART,       /*!< RCP UART connection to the host */
-    HOST_CONNECTION_MODE_RCP_SPI,        /*!< RCP SPI connection to the host */
-    HOST_CONNECTION_MODE_MAX,            /*!< Using for parameter check */
+    OT_HOST_CONNECTION_MODE_NONE = 0x0,     /*!< Disable host connection */
+    OT_HOST_CONNECTION_MODE_CLI_UART,       /*!< CLI UART connection to the host */
+    OT_HOST_CONNECTION_MODE_CLI_USB,        /*!< CLI USB connection to the host */
+    OT_HOST_CONNECTION_MODE_RCP_UART,       /*!< RCP UART connection to the host */
+    OT_HOST_CONNECTION_MODE_RCP_SPI,        /*!< RCP SPI connection to the host */
+    OT_HOST_CONNECTION_MODE_MAX,            /*!< Using for parameter check */
 } esp_openthread_host_connection_mode_t;
 
 /**

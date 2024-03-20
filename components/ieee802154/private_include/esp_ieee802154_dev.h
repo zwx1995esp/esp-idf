@@ -113,8 +113,8 @@ esp_err_t ieee802154_receive(void);
 /**
  * @brief  Notify the IEEE 802.15.4 Radio that the frame is handled done by upper layer.
  *
- * @param[in]  frame  The pointer to the frame which was passed from the function esp_ieee802154_receive_done.
- *                    or ack frame from esp_ieee802154_transmit_done.
+ * @param[in]  frame  The pointer to the frame which was passed from the function esp_ieee802154_test_receive_done.
+ *                    or ack frame from esp_ieee802154_test_transmit_done.
  *
  * @return
  *      - ESP_OK on success
@@ -134,8 +134,8 @@ esp_err_t ieee802154_receive_handle_done(const uint8_t* frame);
  *      - ESP_OK on success.
  *      - ESP_FAIL on failure due to invalid state.
  *
- * Note: The transmit result will be reported via esp_ieee802154_transmit_done()
- *       or esp_ieee802154_transmit_failed().
+ * Note: The transmit result will be reported via esp_ieee802154_test_transmit_done()
+ *       or esp_ieee802154_test_transmit_failed().
  *
  */
 esp_err_t ieee802154_transmit_at(const uint8_t *frame, bool cca, uint32_t time);
@@ -150,7 +150,7 @@ esp_err_t ieee802154_transmit_at(const uint8_t *frame, bool cca, uint32_t time);
  *      - ESP_FAIL on failure due to invalid state.
  *
  * Note: Radio will start receiving after the timestamp, and continue receiving until it receives a valid frame.
- *       Ref to esp_ieee802154_receive_done().
+ *       Ref to esp_ieee802154_test_receive_done().
  *
  */
 esp_err_t ieee802154_receive_at(uint32_t time);
@@ -169,7 +169,7 @@ esp_err_t ieee802154_sleep(void);
  * @brief  Perform energy detection(ED).
  *
  * @param[in]  duration  The duration of energy detection, in symbol unit (16 us).
- *                       The result will be reported via esp_ieee802154_energy_detect_done().
+ *                       The result will be reported via esp_ieee802154_test_energy_detect_done().
  *
  * @return
  *      - ESP_OK on success.
@@ -220,7 +220,7 @@ ieee802154_state_t ieee802154_get_state(void);
  * @param[in]  channel_free  True if the channel is clear, otherwise false.
  *
  */
-extern void esp_ieee802154_cca_done(bool channel_free);
+extern void esp_ieee802154_test_cca_done(bool channel_free);
 
 /**
  * @brief  Current receiving process is failed due to some reasons.

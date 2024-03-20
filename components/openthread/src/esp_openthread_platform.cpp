@@ -93,27 +93,27 @@ static esp_err_t esp_openthread_host_interface_init(const esp_openthread_platfor
 {
     esp_openthread_host_connection_mode_t host_mode = get_host_connection_mode();
     switch (host_mode) {
-    case HOST_CONNECTION_MODE_RCP_SPI:
+    case OT_HOST_CONNECTION_MODE_RCP_SPI:
         ESP_RETURN_ON_ERROR(esp_openthread_host_rcp_spi_init(config), OT_PLAT_LOG_TAG,
                           "esp_openthread_host_rcp_spi_init failed");
         break;
-    case HOST_CONNECTION_MODE_RCP_UART:
+    case OT_HOST_CONNECTION_MODE_RCP_UART:
         ESP_RETURN_ON_ERROR(esp_openthread_host_rcp_uart_init(config), OT_PLAT_LOG_TAG,
                           "esp_openthread_host_rcp_uart_init failed");
         break;
 #if CONFIG_OPENTHREAD_CONSOLE_TYPE_UART
-    case HOST_CONNECTION_MODE_CLI_UART:
+    case OT_HOST_CONNECTION_MODE_CLI_UART:
         ESP_RETURN_ON_ERROR(esp_openthread_host_cli_uart_init(config), OT_PLAT_LOG_TAG,
                           "esp_openthread_host_cli_uart_init failed");
         break;
 #endif
 #if CONFIG_OPENTHREAD_CONSOLE_TYPE_USB_SERIAL_JTAG
-    case HOST_CONNECTION_MODE_CLI_USB:
+    case OT_HOST_CONNECTION_MODE_CLI_USB:
         ESP_RETURN_ON_ERROR(esp_openthread_host_cli_usb_init(config), OT_PLAT_LOG_TAG,
                           "esp_openthread_host_cli_usb_init failed");
         break;
 #endif
-    case HOST_CONNECTION_MODE_NONE:
+    case OT_HOST_CONNECTION_MODE_NONE:
         ESP_LOGI(OT_PLAT_LOG_TAG, "Host connection mode none");
         break;
     default:
@@ -124,9 +124,9 @@ static esp_err_t esp_openthread_host_interface_init(const esp_openthread_platfor
 
 esp_err_t esp_openthread_platform_init(const esp_openthread_platform_config_t *config)
 {
-    ESP_RETURN_ON_FALSE(config->radio_config.radio_mode < RADIO_MODE_MAX,
+    ESP_RETURN_ON_FALSE(config->radio_config.radio_mode < OT_RADIO_MODE_MAX,
                         ESP_ERR_INVALID_ARG, OT_PLAT_LOG_TAG, "Radio mode not supported");
-    ESP_RETURN_ON_FALSE(config->host_config.host_connection_mode < HOST_CONNECTION_MODE_MAX,
+    ESP_RETURN_ON_FALSE(config->host_config.host_connection_mode < OT_HOST_CONNECTION_MODE_MAX,
                         ESP_ERR_INVALID_ARG, OT_PLAT_LOG_TAG, "Host connection mode not supported");
     ESP_RETURN_ON_FALSE(!s_openthread_platform_initialized, ESP_ERR_INVALID_STATE, OT_PLAT_LOG_TAG,
                         "OpenThread platform already initialized");
@@ -168,10 +168,10 @@ esp_err_t esp_openthread_platform_deinit(void)
     esp_openthread_task_queue_deinit();
     esp_openthread_radio_deinit();
 
-    if (get_host_connection_mode() == HOST_CONNECTION_MODE_RCP_SPI){
+    if (get_host_connection_mode() == OT_HOST_CONNECTION_MODE_RCP_SPI){
         esp_openthread_spi_slave_deinit();
-    } else if (get_host_connection_mode() == HOST_CONNECTION_MODE_CLI_UART ||
-        get_host_connection_mode() == HOST_CONNECTION_MODE_RCP_UART) {
+    } else if (get_host_connection_mode() == OT_HOST_CONNECTION_MODE_CLI_UART ||
+        get_host_connection_mode() == OT_HOST_CONNECTION_MODE_RCP_UART) {
         esp_openthread_uart_deinit();
     }
 

@@ -116,7 +116,7 @@ esp_err_t esp_ieee802154_sleep(void);
  * @brief  Set the IEEE 802.15.4 Radio to receive state.
  *
  * @note Radio will continue receiving until it receives a valid frame.
- *       Refer to `esp_ieee802154_receive_done()`.
+ *       Refer to `esp_ieee802154_test_receive_done()`.
  *
  * @return
  *      - ESP_OK on success
@@ -127,8 +127,8 @@ esp_err_t esp_ieee802154_receive(void);
 
 /**
  * @brief  Transmit the given frame.
- *         The transmit result will be reported via `esp_ieee802154_transmit_done()`
- *         or `esp_ieee802154_transmit_failed()`.
+ *         The transmit result will be reported via `esp_ieee802154_test_transmit_done()`
+ *         or `esp_ieee802154_test_transmit_failed()`.
  *
  * @param[in]  frame  The pointer to the frame, the frame format:
  *                    |-----------------------------------------------------------------------|
@@ -443,7 +443,7 @@ bool esp_ieee802154_get_rx_when_idle(void);
  * @brief  Perform energy detection.
  *
  * @param[in]  duration  The duration of energy detection, in symbol unit (16 us).
- *                       The result will be reported via esp_ieee802154_energy_detect_done().
+ *                       The result will be reported via esp_ieee802154_test_energy_detect_done().
  *
  * @return
  *      - ESP_OK on success.
@@ -455,8 +455,8 @@ esp_err_t esp_ieee802154_energy_detect(uint32_t duration);
 /**
  * @brief  Notify the IEEE 802.15.4 Radio that the frame is handled done by upper layer.
  *
- * @param[in]  frame  The pointer to the frame which was passed from the function `esp_ieee802154_receive_done()`
- *                    or ack frame from `esp_ieee802154_transmit_done()`.
+ * @param[in]  frame  The pointer to the frame which was passed from the function `esp_ieee802154_test_receive_done()`
+ *                    or ack frame from `esp_ieee802154_test_transmit_done()`.
  *
  * @return
  *      - ESP_OK on success
@@ -478,13 +478,13 @@ esp_err_t esp_ieee802154_receive_handle_done(const uint8_t *frame);
  * @param[in]  frame_info  More information of the received frame, refer to esp_ieee802154_frame_info_t.
  *
  */
-extern void esp_ieee802154_receive_done(uint8_t *frame, esp_ieee802154_frame_info_t *frame_info);
+extern void esp_ieee802154_test_receive_done(uint8_t *frame, esp_ieee802154_frame_info_t *frame_info);
 
 /**
  * @brief  The SFD field of the frame was received.
  *
  */
-extern void esp_ieee802154_receive_sfd_done(void);
+extern void esp_ieee802154_test_receive_sfd_done(void);
 
 /**
  * @brief  The Frame Transmission succeeded.
@@ -497,7 +497,7 @@ extern void esp_ieee802154_receive_sfd_done(void);
  * @param[in]  ack_frame_info  More information of the ACK frame, refer to esp_ieee802154_frame_info_t.
  *
  */
-extern void esp_ieee802154_transmit_done(const uint8_t *frame, const uint8_t *ack, esp_ieee802154_frame_info_t *ack_frame_info);
+extern void esp_ieee802154_test_transmit_done(const uint8_t *frame, const uint8_t *ack, esp_ieee802154_frame_info_t *ack_frame_info);
 
 /**
  * @brief  The Frame Transmission failed. Refer to `esp_ieee802154_transmit()`.
@@ -506,13 +506,13 @@ extern void esp_ieee802154_transmit_done(const uint8_t *frame, const uint8_t *ac
  * @param[in]  error  The transmission failure reason, refer to esp_ieee802154_tx_error_t.
  *
  */
-extern void esp_ieee802154_transmit_failed(const uint8_t *frame, esp_ieee802154_tx_error_t error);
+extern void esp_ieee802154_test_transmit_failed(const uint8_t *frame, esp_ieee802154_tx_error_t error);
 
 /**
  * @brief  The SFD field of the frame was transmitted.
  *
  */
-extern void esp_ieee802154_transmit_sfd_done(uint8_t *frame);
+extern void esp_ieee802154_test_transmit_sfd_done(uint8_t *frame);
 
 /**
  * @brief  The energy detection done. Refer to `esp_ieee802154_energy_detect()`.
@@ -520,13 +520,13 @@ extern void esp_ieee802154_transmit_sfd_done(uint8_t *frame);
  * @param[in]  power  The detected power level, in dBm.
  *
  */
-extern void esp_ieee802154_energy_detect_done(int8_t power);
+extern void esp_ieee802154_test_energy_detect_done(int8_t power);
 
 /**
  * @brief  Set the IEEE 802.15.4 Radio to receive state at a specific time.
  *
  * @note   Radio will start receiving after the timestamp, and continue receiving until it receives a valid frame.
- *         Refer to `esp_ieee802154_receive_done()`.
+ *         Refer to `esp_ieee802154_test_receive_done()`.
  *
  * @param[in]  time  A specific timestamp for starting receiving.
  * @return
@@ -538,8 +538,8 @@ esp_err_t esp_ieee802154_receive_at(uint32_t time);
 
 /**
  * @brief  Transmit the given frame at a specific time.
- *         The transmit result will be reported via `esp_ieee802154_transmit_done()`
- *         or `esp_ieee802154_transmit_failed()`.
+ *         The transmit result will be reported via `esp_ieee802154_test_transmit_done()`
+ *         or `esp_ieee802154_test_transmit_failed()`.
  *
  * @param[in]  frame  The pointer to the frame. Refer to `esp_ieee802154_transmit()`.
  * @param[in]  cca    Perform CCA before transmission if it's true, otherwise transmit the frame directly.
@@ -613,6 +613,23 @@ void esp_ieee802154_txrx_statistic_clear(void);
  */
 void esp_ieee802154_txrx_statistic_print(void);
 #endif // CONFIG_IEEE802154_TXRX_STATISTIC
+
+// workaround
+extern void esp_ieee802154_receive_done(uint8_t *data, esp_ieee802154_frame_info_t *frame_info);
+extern void esp_ieee802154_receive_sfd_done(void);
+extern void esp_ieee802154_transmit_done(const uint8_t *frame, const uint8_t *ack, esp_ieee802154_frame_info_t *ack_frame_info);
+extern void esp_ieee802154_transmit_failed(const uint8_t *frame, esp_ieee802154_tx_error_t error);
+extern void esp_ieee802154_transmit_sfd_done(uint8_t *frame);
+extern void esp_ieee802154_cca_done(bool channel_free);
+extern void esp_ieee802154_energy_detect_done(int8_t power);
+void esp_ieee802154_ot_receive_done(uint8_t *data, esp_ieee802154_frame_info_t *frame_info);
+void esp_ieee802154_ot_receive_sfd_done(void);
+void esp_ieee802154_ot_transmit_done(const uint8_t *frame, const uint8_t *ack, esp_ieee802154_frame_info_t *ack_frame_info);
+void esp_ieee802154_ot_transmit_failed(const uint8_t *frame, esp_ieee802154_tx_error_t error);
+void esp_ieee802154_ot_transmit_sfd_done(uint8_t *frame);
+void esp_ieee802154_ot_cca_done(bool channel_free);
+void esp_ieee802154_ot_energy_detect_done(int8_t power);
+void esp_ieee802154_set_ot_started(bool is_started);
 
 #ifdef __cplusplus
 }

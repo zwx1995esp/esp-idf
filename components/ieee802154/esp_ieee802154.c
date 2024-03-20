@@ -21,6 +21,20 @@
 #include "hal/ieee802154_ll.h"
 #include "hal/ieee802154_common_ll.h"
 
+#include <stdatomic.h>
+static atomic_uint_fast8_t s_stack_flag;
+atomic_bool s_is_openthread_started;
+
+static IRAM_ATTR bool esp_ieee802154_get_ot_started(void)
+{
+    return atomic_load(&s_is_openthread_started);
+}
+
+void IRAM_ATTR esp_ieee802154_set_ot_started(bool is_started)
+{
+    atomic_store(&s_is_openthread_started, is_started);
+}
+
 esp_err_t esp_ieee802154_enable(void)
 {
     ieee802154_enable();
@@ -128,7 +142,6 @@ esp_err_t esp_ieee802154_set_coordinator(bool enable)
     return ESP_OK;
 }
 
-#if CONFIG_IEEE802154_MULTI_PAN_ENABLE
 
 uint16_t esp_ieee802154_get_multipan_panid(esp_ieee802154_multipan_index_t index)
 {
@@ -182,8 +195,6 @@ esp_err_t esp_ieee802154_set_multipan_enable(uint8_t mask)
     return ESP_OK;
 }
 
-#else
-
 uint16_t esp_ieee802154_get_panid(void)
 {
     return ieee802154_ll_get_multipan_panid(ESP_IEEE802154_MULTIPAN_0);
@@ -217,8 +228,6 @@ esp_err_t esp_ieee802154_set_extended_address(const uint8_t *ext_addr)
     ieee802154_ll_set_multipan_ext_addr(ESP_IEEE802154_MULTIPAN_0, ext_addr);
     return ESP_OK;
 }
-
-#endif // CONFIG_IEEE802154_MULTI_PAN_ENABLE
 
 esp_ieee802154_pending_mode_t esp_ieee802154_get_pending_mode(void)
 {
@@ -254,12 +263,26 @@ esp_err_t esp_ieee802154_transmit_at(const uint8_t *frame, bool cca, uint32_t ti
 
 esp_err_t esp_ieee802154_sleep(void)
 {
-    return ieee802154_sleep();
+    esp_err_t err = ESP_OK;
+    if (atomic_load(&s_stack_flag)) {
+        atomic_fetch_sub(&s_stack_flag, 1);
+    } else {
+        return err;
+    }
+    if (!atomic_load(&s_stack_flag)) {
+        err = ieee802154_sleep();
+    }
+    return err;
 }
 
 esp_err_t esp_ieee802154_receive(void)
 {
-    return ieee802154_receive();
+    esp_err_t err = ESP_OK;
+    if (!atomic_load(&s_stack_flag)) {
+        err = ieee802154_receive();
+    }
+    atomic_fetch_add(&s_stack_flag, 1);
+    return err;
 }
 
 esp_err_t esp_ieee802154_receive_at(uint32_t time)
@@ -414,3 +437,71 @@ void esp_ieee802154_txrx_statistic_print(void)
     ieee802154_txrx_statistic_print();
 }
 #endif // CONFIG_IEEE802154_TXRX_STATISTIC
+
+
+
+///// work around /////
+
+void esp_ieee802154_test_receive_done(uint8_t *data, esp_ieee802154_frame_info_t *frame_info)
+{
+    if (esp_ieee802154_get_ot_started()) {
+        esp_ieee802154_ot_receive_done(data, frame_info);
+    } else {
+        esp_ieee802154_receive_done(data, frame_info);
+    }
+}
+
+void esp_ieee802154_test_receive_sfd_done(void)
+{
+    if (esp_ieee802154_get_ot_started()) {
+        esp_ieee802154_ot_receive_sfd_done();
+    } else {
+        esp_ieee802154_receive_sfd_done();
+    }
+}
+
+void esp_ieee802154_test_transmit_done(const uint8_t *frame, const uint8_t *ack, esp_ieee802154_frame_info_t *ack_frame_info)
+{
+    if (esp_ieee802154_get_ot_started()) {
+        esp_ieee802154_ot_transmit_done(frame, ack, ack_frame_info);
+    } else {
+        esp_ieee802154_transmit_done(frame, ack, ack_frame_info);
+    }
+}
+
+void esp_ieee802154_test_transmit_failed(const uint8_t *frame, esp_ieee802154_tx_error_t error)
+{
+    if (esp_ieee802154_get_ot_started()) {
+        esp_ieee802154_ot_transmit_failed(frame, error);
+    } else {
+        esp_ieee802154_transmit_failed(frame, error);
+    }
+}
+
+void esp_ieee802154_test_transmit_sfd_done(uint8_t *frame)
+{
+    if (esp_ieee802154_get_ot_started()) {
+        esp_ieee802154_ot_transmit_sfd_done(frame);
+    } else {
+        esp_ieee802154_transmit_sfd_done(frame);
+    }
+}
+
+
+void esp_ieee802154_test_cca_done(bool channel_free)
+{
+    if (esp_ieee802154_get_ot_started()) {
+        esp_ieee802154_ot_cca_done(channel_free);
+    } else {
+        esp_ieee802154_cca_done(channel_free);
+    }
+}
+
+void esp_ieee802154_test_energy_detect_done(int8_t power)
+{
+    if (esp_ieee802154_get_ot_started()) {
+        esp_ieee802154_ot_energy_detect_done(power);
+    } else {
+        esp_ieee802154_energy_detect_done(power);
+    }
+}

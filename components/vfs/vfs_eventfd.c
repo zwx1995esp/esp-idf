@@ -353,7 +353,7 @@ esp_err_t esp_vfs_eventfd_register(const esp_vfs_eventfd_config_t *config)
         return ESP_ERR_INVALID_ARG;
     }
     if (s_eventfd_vfs_id != -1) {
-        return ESP_ERR_INVALID_STATE;
+        return ESP_OK;
     }
 
     s_event_size = config->max_fds;

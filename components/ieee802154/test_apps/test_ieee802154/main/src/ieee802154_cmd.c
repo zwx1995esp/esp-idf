@@ -859,7 +859,7 @@ static void register_restart(void)
     ESP_ERROR_CHECK(esp_console_cmd_register(&cmd));
 }
 
-void esp_ieee802154_transmit_done(const uint8_t *frame, const uint8_t *ack, esp_ieee802154_frame_info_t *ack_frame_info)
+void esp_ieee802154_test_transmit_done(const uint8_t *frame, const uint8_t *ack, esp_ieee802154_frame_info_t *ack_frame_info)
 {
     ESP_EARLY_LOGI(TAG, "Tx Done %d bytes", frame[0]);
     for(uint8_t idx = 1; idx < frame[0]; idx+=8) {
@@ -879,7 +879,7 @@ void esp_ieee802154_transmit_done(const uint8_t *frame, const uint8_t *ack, esp_
     }
 }
 
-void esp_ieee802154_receive_done(uint8_t *frame, esp_ieee802154_frame_info_t *frame_info)
+void esp_ieee802154_test_receive_done(uint8_t *frame, esp_ieee802154_frame_info_t *frame_info)
 {
     ESP_EARLY_LOGI(TAG, "Rx Done %d bytes", frame[0]);
     for(uint8_t idx = 1; idx < frame[0]; idx+=8) {
@@ -890,22 +890,22 @@ void esp_ieee802154_receive_done(uint8_t *frame, esp_ieee802154_frame_info_t *fr
     esp_ieee802154_receive_handle_done(frame);
 }
 
-void esp_ieee802154_energy_detect_done(int8_t power)
+void esp_ieee802154_test_energy_detect_done(int8_t power)
 {
     ESP_EARLY_LOGI(TAG, "ed_scan_rss_value: %d dB", power);
 }
 
-void esp_ieee802154_transmit_sfd_done(uint8_t *frame)
+void esp_ieee802154_test_transmit_sfd_done(uint8_t *frame)
 {
     ESP_EARLY_LOGI(TAG, "tx sfd done, Radio state: %d", esp_ieee802154_get_state());
 }
 
-void esp_ieee802154_receive_sfd_done(void)
+void esp_ieee802154_test_receive_sfd_done(void)
 {
     ESP_EARLY_LOGI(TAG, "rx sfd done, Radio state: %d", esp_ieee802154_get_state());
 }
 
-void esp_ieee802154_transmit_failed(const uint8_t *frame, esp_ieee802154_tx_error_t error)
+void esp_ieee802154_test_transmit_failed(const uint8_t *frame, esp_ieee802154_tx_error_t error)
 {
     ESP_EARLY_LOGI(TAG, "the Frame Transmission failed, Failure reason: %d", error);
 }

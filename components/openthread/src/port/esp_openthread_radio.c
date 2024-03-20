@@ -129,9 +129,9 @@ esp_err_t esp_openthread_radio_init(const esp_openthread_platform_config_t *conf
     s_transmit_frame.mInfo.mTxInfo.mIeInfo = &s_transmit_ie_info;
 #endif
 
-    esp_ieee802154_enable();
-    esp_ieee802154_set_promiscuous(false);
-    esp_ieee802154_set_rx_when_idle(true);
+    // esp_ieee802154_enable();
+    // esp_ieee802154_set_promiscuous(false);
+    // esp_ieee802154_set_rx_when_idle(true);
 
     return esp_openthread_platform_workflow_register(&esp_openthread_radio_update, &esp_openthread_radio_process,
                                                      s_radio_workflow);
@@ -245,17 +245,17 @@ void otPlatRadioGetIeeeEui64(otInstance *aInstance, uint8_t *aIeeeEui64)
 
 void otPlatRadioSetPanId(otInstance *aInstance, uint16_t panid)
 {
-    esp_ieee802154_set_panid(panid);
+    esp_ieee802154_set_multipan_panid(ESP_IEEE802154_MULTIPAN_1, panid);
 }
 
 void otPlatRadioSetExtendedAddress(otInstance *aInstance, const otExtAddress *aAddress)
 {
-    esp_ieee802154_set_extended_address(aAddress->m8);
+    esp_ieee802154_set_multipan_extended_address(ESP_IEEE802154_MULTIPAN_1, aAddress->m8);
 }
 
 void otPlatRadioSetShortAddress(otInstance *aInstance, uint16_t aAddress)
 {
-    esp_ieee802154_set_short_address(aAddress);
+    esp_ieee802154_set_multipan_short_address(ESP_IEEE802154_MULTIPAN_1, aAddress);
 }
 
 void otPlatRadioSetPromiscuous(otInstance *aInstance, bool aEnable)
@@ -312,7 +312,7 @@ otError otPlatRadioTransmit(otInstance *aInstance, otRadioFrame *aFrame)
             if (!s_transmit_frame.mInfo.mTxInfo.mIsARetx) {
                 otMacFrameSetKeyId(aFrame, s_key_id);
             }
-            esp_ieee802154_get_extended_address(s_security_addr);
+            esp_ieee802154_get_multipan_extended_address(ESP_IEEE802154_MULTIPAN_1, s_security_addr);
         }
         memcpy(s_security_key, s_current_key.mKeyMaterial.mKey.m8, sizeof(s_current_key.mKeyMaterial.mKey.m8));
         esp_ieee802154_set_transmit_security(&aFrame->mPsdu[-1], s_security_key, s_security_addr);
@@ -563,7 +563,7 @@ uint8_t otPlatRadioGetCslUncertainty(otInstance *aInstance)
 #endif
 
 // events
-void IRAM_ATTR esp_ieee802154_transmit_done(const uint8_t *frame, const uint8_t *ack,
+void IRAM_ATTR esp_ieee802154_ot_transmit_done(const uint8_t *frame, const uint8_t *ack,
                                             esp_ieee802154_frame_info_t *ack_frame_info)
 {
     ETS_ASSERT(frame == (uint8_t *)&s_transmit_psdu);
@@ -620,7 +620,7 @@ static esp_err_t IRAM_ATTR enh_ack_set_security_addr_and_key(otRadioFrame *ack_f
     s_ack_key_id = key_id;
     s_with_security_enh_ack = true;
     if (otMacFrameIsKeyIdMode1(ack_frame)) {
-        esp_ieee802154_get_extended_address(s_security_addr);
+        esp_ieee802154_get_multipan_extended_address(ESP_IEEE802154_MULTIPAN_1, s_security_addr);
         memcpy(s_security_key, (*key).mKeyMaterial.mKey.m8, OT_MAC_KEY_SIZE);
     }
 
@@ -676,7 +676,7 @@ esp_err_t IRAM_ATTR esp_ieee802154_enh_ack_generator(uint8_t *frame, esp_ieee802
     return ESP_OK;
 }
 
-void IRAM_ATTR esp_ieee802154_receive_done(uint8_t *data, esp_ieee802154_frame_info_t *frame_info)
+void IRAM_ATTR esp_ieee802154_ot_receive_done(uint8_t *data, esp_ieee802154_frame_info_t *frame_info)
 {
     otRadioFrame ot_frame;
     ot_frame.mPsdu = data + 1;
@@ -703,7 +703,7 @@ void IRAM_ATTR esp_ieee802154_receive_done(uint8_t *data, esp_ieee802154_frame_i
     set_event(EVENT_RX_DONE);
 }
 
-void IRAM_ATTR esp_ieee802154_transmit_failed(const uint8_t *frame, esp_ieee802154_tx_error_t error)
+void IRAM_ATTR esp_ieee802154_ot_transmit_failed(const uint8_t *frame, esp_ieee802154_tx_error_t error)
 {
     ETS_ASSERT(frame == (uint8_t *)&s_transmit_psdu);
 
@@ -712,11 +712,11 @@ void IRAM_ATTR esp_ieee802154_transmit_failed(const uint8_t *frame, esp_ieee8021
     set_event(EVENT_TX_FAILED);
 }
 
-void IRAM_ATTR esp_ieee802154_receive_sfd_done(void)
+void IRAM_ATTR esp_ieee802154_ot_receive_sfd_done(void)
 {
 }
 
-void IRAM_ATTR esp_ieee802154_transmit_sfd_done(uint8_t *frame)
+void IRAM_ATTR esp_ieee802154_ot_transmit_sfd_done(uint8_t *frame)
 {
     assert(frame == (uint8_t *)&s_transmit_psdu || frame == s_enhack);
 
@@ -748,14 +748,14 @@ void IRAM_ATTR esp_ieee802154_transmit_sfd_done(uint8_t *frame)
 #endif // OPENTHREAD_CONFIG_TIME_SYNC_ENABLE
 }
 
-void IRAM_ATTR esp_ieee802154_energy_detect_done(int8_t power)
+void IRAM_ATTR esp_ieee802154_ot_energy_detect_done(int8_t power)
 {
     s_ed_power = power;
 
     set_event(EVENT_ENERGY_DETECT_DONE);
 }
 
-void IRAM_ATTR esp_ieee802154_cca_done(bool channel_free)
+void IRAM_ATTR esp_ieee802154_ot_cca_done(bool channel_free)
 {
 }
 
