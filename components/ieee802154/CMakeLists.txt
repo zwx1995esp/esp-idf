@@ -5,7 +5,7 @@ set(include "include")
 set(private_include "")
 
 if(CONFIG_IEEE802154_ENABLED)
-    list(APPEND srcs "esp_ieee802154.c"
+    list(APPEND srcs
         "driver/esp_ieee802154_ack.c"
         "driver/esp_ieee802154_dev.c"
         "driver/esp_ieee802154_frame.c"
@@ -13,6 +13,11 @@ if(CONFIG_IEEE802154_ENABLED)
         "driver/esp_ieee802154_util.c"
         "driver/esp_ieee802154_sec.c"
         "driver/esp_ieee802154_timer.c")
+    if (CONFIG_IEEE802154_MULTI_PAN_ENABLE)
+        list(APPEND srcs "esp_ieee802154_multipan.c")
+    else()
+        list(APPEND srcs "esp_ieee802154.c")
+    endif()
     list(APPEND private_include "private_include")
 
     if(CONFIG_IEEE802154_TEST)

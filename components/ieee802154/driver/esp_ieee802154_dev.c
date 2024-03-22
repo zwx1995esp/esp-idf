@@ -107,14 +107,20 @@ static void ieee802154_transmit_done(const uint8_t *frame, const uint8_t *ack, e
     }
 }
 
-esp_err_t ieee802154_receive_handle_done(const uint8_t *data)
+uint16_t ieee802154_get_frame_index_in_receiving_table(const uint8_t *data)
 {
     uint16_t size = data - &s_rx_frame[0][0];
     if ((size % IEEE802154_RX_FRAME_SIZE) != 0
             || (size / IEEE802154_RX_FRAME_SIZE) >= CONFIG_IEEE802154_RX_BUFFER_SIZE) {
-        return ESP_FAIL;
+        IEEE802154_ASSERT(false);
     }
-    s_rx_frame_info[size / IEEE802154_RX_FRAME_SIZE].process = false;
+    return (size / IEEE802154_RX_FRAME_SIZE);
+}
+
+esp_err_t ieee802154_receive_handle_done(const uint8_t *data)
+{
+    uint16_t index = ieee802154_get_frame_index_in_receiving_table(data);
+    s_rx_frame_info[index].process = false;
     return ESP_OK;
 }
 

@@ -238,6 +238,8 @@ extern void esp_ieee802154_receive_failed(uint16_t error);
  */
 extern void esp_ieee802154_ed_failed(uint16_t error);
 
+uint16_t ieee802154_get_frame_index_in_receiving_table(const uint8_t *data);
+
 #if CONFIG_IEEE802154_TEST
 #define IEEE802154_STATIC
 #define IEEE802154_INLINE
