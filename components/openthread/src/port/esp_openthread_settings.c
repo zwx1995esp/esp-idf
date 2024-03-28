@@ -1,5 +1,5 @@
 /*
- * SPDX-FileCopyrightText: 2023 Espressif Systems (Shanghai) CO LTD
+ * SPDX-FileCopyrightText: 2023-2024 Espressif Systems (Shanghai) CO LTD
  *
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -17,6 +17,7 @@
 #define OT_NAMESPACE              "openthread"
 #define OT_PART_NAME              s_storage_name
 #define OT_KEY_PATTERN            "OT%02x"
+#define OT_TEST_KEY_PATTERN       "T%03x"
 #define OT_KEY_INDEX_PATTERN      "OT%02x%02x"
 #define OT_KEY_PATTERN_LEN        5
 #define OT_KEY_INDEX_PATTERN_LEN  7
@@ -62,6 +63,22 @@ static esp_err_t get_next_empty_index(uint16_t aKey, uint8_t *index)
     return ESP_ERR_NOT_FOUND;
 }
 
+void test_nvs_write(uint8_t i)
+{
+    char ot_nvs_key[OT_KEY_PATTERN_LEN] = { 0 };
+    uint8_t aValue[5] = {0,1,2,3,4};
+    snprintf(ot_nvs_key, sizeof(ot_nvs_key), OT_TEST_KEY_PATTERN, (100 + i));
+    nvs_set_blob(s_ot_nvs_handle, ot_nvs_key, aValue, 5);
+    nvs_commit(s_ot_nvs_handle);
+}
+
+void test_nvs_clear(uint8_t i)
+{
+    char ot_nvs_key[OT_KEY_PATTERN_LEN] = { 0 };
+    snprintf(ot_nvs_key, sizeof(ot_nvs_key), OT_TEST_KEY_PATTERN, (100 + i));
+    nvs_erase_key(s_ot_nvs_handle, ot_nvs_key);
+    nvs_commit(s_ot_nvs_handle);
+}
 static esp_err_t find_target_key_using_index(uint16_t aKey, int aIndex, char *key, size_t key_len)
 {
     ESP_RETURN_ON_FALSE((s_ot_nvs_handle != 0), ESP_ERR_INVALID_STATE, OT_PLAT_LOG_TAG, "OT NVS handle is invalid.");
